@@ -18,55 +18,80 @@
 
 macOS / Windows のどちらでも動作します。改行コードは `.gitattributes` でLFに正規化しているため、Windows でクローンしてもスクリプトは壊れません。
 
-## セットアップ
+## クイックスタート（OS別）
 
-### 0. 事前準備（OS別）
+### 🍎 macOS
 
-ホストの `~/.ssh` と `~/.gitconfig` を読み取り専用でマウントします。**ファイルが存在しないと Docker が同名ディレクトリを自動生成して Git/SSH が壊れる**ため、初回は空ファイルを用意してください。
+1. **必要なソフトをインストール**
+   - [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)（Apple Silicon / Intel 対応版を選択）
+   - [Visual Studio Code](https://code.visualstudio.com/) ＋ [Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+   - Docker Desktop の **Settings → Resources** でメモリを **4GB以上** に設定
 
-**macOS / Linux:**
+2. **リポジトリを取得**
+   ```bash
+   git clone https://github.com/cti1650/ai-agents-sandbox.git
+   cd ai-agents-sandbox
+   ```
 
-```bash
-mkdir -p ~/.ssh
-touch ~/.gitconfig
-```
+3. **事前準備**（マウント先の用意と環境変数）
+   ```bash
+   mkdir -p ~/.ssh
+   touch ~/.gitconfig        # 無いと Docker がディレクトリ化して Git が壊れる
+   cp .env.example .env      # 必要なら API キーを記入（任意）
+   ```
+   > `~/.ssh/config` に `UseKeychain` がある場合は、`Host *` に `IgnoreUnknown UseKeychain` を追加してください（コンテナ内のLinux SSHは非対応のため）。
 
-**Windows (PowerShell):**
+4. **コンテナで開く**
+   ```bash
+   code .
+   ```
+   VS Code で `Cmd+Shift+P` →「**Dev Containers: Reopen in Container**」を選択。初回はビルドに数分かかり、完了後に `scripts/verify.sh` が自動実行されます。
 
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.ssh" | Out-Null
-New-Item -ItemType File -Force -Path "$env:USERPROFILE\.gitconfig" | Out-Null
-```
+### 🪟 Windows
 
-> SSH鍵でGit操作する場合は、各OSのユーザーホーム直下（`~/.ssh`）に鍵を配置してください。
-> macOSの `~/.ssh/config` に `UseKeychain` がある場合、コンテナ内のLinux SSHでは非対応です。
-> ホスト側configの `Host *` に `IgnoreUnknown UseKeychain` を追加すると回避できます（`verify.sh` でも検知されます）。
+> **WSL2 上での利用を強く推奨**します（Windowsファイルシステム上はマウントが遅く、改行コードや権限の問題も起きやすいため）。
 
-### 1. 環境変数の設定
+1. **WSL2 を有効化**（PowerShell を管理者として実行）
+   ```powershell
+   wsl --install
+   ```
+   再起動後、Ubuntu などのディストリビューションが使えるようになります。
 
-`.env.example`をコピーして`.env`を作成し、必要なAPIキーを設定:
+2. **必要なソフトをインストール**
+   - [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) をインストールし、**Settings → General** で「**Use the WSL 2 based engine**」を有効化
+   - **Settings → Resources** でメモリを **4GB以上** に設定
+   - [Visual Studio Code](https://code.visualstudio.com/) ＋ [Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-```bash
-cp .env.example .env
-# .env を編集して使用するエージェントのキーを入力
-```
+3. **リポジトリを取得**（WSL2 内のホームに置くこと）
 
-キーは任意です（使うエージェントの分だけでOK）。各CLIはコンテナ内で対話的に認証することもできます。
+   WSL ターミナル（Ubuntu）を開いて:
+   ```bash
+   git clone https://github.com/cti1650/ai-agents-sandbox.git
+   cd ai-agents-sandbox
+   ```
+   > `C:\...`（Windows側）ではなく WSL2 内（`~/` 配下）に置くとマウントが高速で安定します。
 
-### 2. ホスト設定のマウント
+4. **事前準備**（WSL ターミナル内で実行）
+   ```bash
+   mkdir -p ~/.ssh
+   touch ~/.gitconfig
+   cp .env.example .env
+   ```
 
-ローカルマシンの以下のディレクトリがコンテナにマウントされます（読み取り専用）:
+5. **コンテナで開く**
+   ```bash
+   code .
+   ```
+   VS Code が WSL に接続して起動します。`Ctrl+Shift+P` →「**Dev Containers: Reopen in Container**」を選択。
+
+### ホスト設定のマウントについて
+
+ホストの以下が読み取り専用でコンテナにマウントされます。各AIツールの認証はコンテナ内で個別に行ってください。
 
 - `~/.ssh` - SSHキー（Git操作用）
 - `~/.gitconfig` - Git設定
 
-各AIツールの認証はコンテナ内で個別に行ってください。
-
-### 3. DevContainerの起動
-
-1. VSCodeでこのフォルダを開く
-2. コマンドパレット（Cmd+Shift+P）を開く
-3. 「Dev Containers: Reopen in Container」を選択
+> `.env` は任意です（使うエージェントの分のキーだけでOK）。各CLIはコンテナ内で対話的にも認証できます。
 
 ## 検証（Verification）
 
