@@ -1,7 +1,7 @@
 # AI Agents Sandbox - Secure DevContainer
 # Claude Code, Codex CLI, Antigravity CLI
 
-FROM node:22-bookworm-slim
+FROM node:24-bookworm-slim
 
 # Avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
