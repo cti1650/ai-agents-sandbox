@@ -164,6 +164,24 @@ agy
 Dev Containers: Rebuild Container
 ```
 
+### Git の SSH 認証がうまくいかない
+
+事前準備不要の構成では、Git over SSH は**ホストの ssh-agent 転送**を使います。`git pull` / `push` が認証エラーになる場合:
+
+1. **ホスト側（コンテナの外）で鍵がエージェントに登録されているか確認:**
+   ```bash
+   ssh-add -l        # 鍵が表示されればOK。空なら下記で追加
+   ```
+   - macOS: `ssh-add --apple-use-keychain ~/.ssh/id_ed25519`（Keychain 連携で次回以降も自動）
+   - Windows: サービス「**OpenSSH Authentication Agent**」を「自動」起動にして `ssh-add`
+
+2. **それでも解決しない場合は HTTPS + GitHub CLI（鍵不要）:**
+   ```bash
+   gh auth login            # ブラウザ認証
+   gh auth setup-git        # gh を Git の資格情報ヘルパーに設定
+   git remote set-url origin https://github.com/<owner>/<repo>.git
+   ```
+
 ## ライセンス
 
 [MIT License](LICENSE) のもとで公開しています。
