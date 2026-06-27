@@ -69,6 +69,9 @@ bash scripts/verify.sh
 - 特権昇格の禁止（no-new-privileges）
 - リソース制限（メモリ8GB、CPU 4コア）
 - ホスト設定の読み取り専用マウント
+- npmサプライチェーン対策（`.npmrc`）:
+  - [Takumi Guard](https://shisho.dev/docs/ja/t/guard/quickstart/npm/)（匿名モード）で悪性パッケージをインストール前にブロック
+  - `min-release-age=3` で公開3日未満のバージョンを隔離（要 npm 11.10.0+）
 
 ## 使用方法
 
