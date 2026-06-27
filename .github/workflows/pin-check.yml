@@ -1,0 +1,28 @@
+name: Pin Check
+
+# Enforce that every GitHub Action is pinned to a full commit SHA (and that
+# the "# vX.Y.Z" comment matches that SHA). Complements Dependabot: Dependabot
+# keeps pins current, this fails CI if a new/edited workflow introduces an
+# unpinned or mismatched action.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Verify actions are SHA-pinned
+        uses: suzuki-shunsuke/pinact-action@896d595f299e71d65b9d28349d6956abe144390a # v3.0.0
+        with:
+          fix: "false"
+          verify: "true"
+          skip_push: "true"
