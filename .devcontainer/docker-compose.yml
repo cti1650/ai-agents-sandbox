@@ -10,11 +10,6 @@ services:
       # Mount host SSH keys (read-only for security)
       - ~/.ssh:/home/vscode/.ssh:ro
 
-      # Mount global AI agent configurations (read-only)
-      - ~/.claude:/home/vscode/.claude:ro
-      - ~/.codex:/home/vscode/.codex:ro
-      - ~/.config/antigravity:/home/vscode/.config/antigravity:ro
-
       # Git config (read-only)
       - ~/.gitconfig:/home/vscode/.gitconfig:ro
 

@@ -28,15 +28,14 @@ OPENAI_API_KEY=sk-xxxxx
 GOOGLE_API_KEY=xxxxx
 ```
 
-### 2. グローバル設定の準備（任意）
+### 2. ホスト設定のマウント
 
 ローカルマシンの以下のディレクトリがコンテナにマウントされます（読み取り専用）:
 
-- `~/.claude` - Claude Codeの設定
-- `~/.codex` - Codex CLIの設定
-- `~/.config/antigravity` - Antigravity CLIの設定
 - `~/.ssh` - SSHキー（Git操作用）
 - `~/.gitconfig` - Git設定
+
+各AIツールの認証はコンテナ内で個別に行ってください。
 
 ### 3. DevContainerの起動
 
@@ -68,14 +67,6 @@ agy
 ```
 
 ## トラブルシューティング
-
-### グローバル設定が読み込まれない
-
-ホストマシンの設定ディレクトリが存在することを確認:
-
-```bash
-ls -la ~/.claude ~/.codex ~/.config/antigravity
-```
 
 ### APIキーが認識されない
 
