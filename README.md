@@ -12,7 +12,7 @@
 
 ## 必要要件
 
-- Docker Desktop（**8GB以上のメモリ割当**を推奨。`docker-compose.yml` でコンテナに最大メモリ8GB / CPU4コアを割り当てます。Docker Desktop の割当がこれ未満だと起動失敗や強い制約がかかります）
+- Docker Desktop（**4GB以上のメモリ割当**を推奨。低スペック端末でも動くよう、`docker-compose.yml` でコンテナに最大メモリ4GB / CPU2コアを割り当てています。余裕がある場合はこの値を上げると高速化します）
 - Visual Studio Code
 - [Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
@@ -91,7 +91,7 @@ bash scripts/verify.sh
 - 非rootユーザーでの実行
 - 不要なLinux capabilitiesの削除
 - 特権昇格の禁止（no-new-privileges）
-- リソース制限（メモリ8GB、CPU 4コア）
+- リソース制限（メモリ4GB、CPU 2コア）
 - ホスト設定の読み取り専用マウント
 - npmサプライチェーン対策（`.npmrc`）:
   - [Takumi Guard](https://shisho.dev/docs/ja/t/guard/quickstart/npm/)（匿名モード）で悪性パッケージをインストール前にブロック

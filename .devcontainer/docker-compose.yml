@@ -36,12 +36,13 @@ services:
     security_opt:
       - no-new-privileges:true
 
-    # Resource limits
+    # Resource limits (kept modest so low-spec machines can run the container).
+    # Raise these if you have headroom and want faster builds.
     deploy:
       resources:
         limits:
-          memory: 8G
-          cpus: "4"
+          memory: 4G
+          cpus: "2"
 
     # Keep container running
     command: sleep infinity
