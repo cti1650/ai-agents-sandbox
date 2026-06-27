@@ -94,6 +94,12 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 >
 > 各AIツール（claude / codex / agy）の認証はコンテナ内で個別に行ってください（認証データは named volume に永続化されます）。`.env` は任意です。
 
+## VS Codeの日本語化
+
+DevContainer起動時に、日本語言語パック拡張機能（`MS-CEINTL.vscode-language-pack-ja`）が自動でインストールされ、表示言語が日本語（`locale: ja`）に設定されます。初回はVS Codeから再起動を促されるので、表示に従って「**Restart**」を選択してください。
+
+英語表示に戻したい場合は `Cmd/Ctrl+Shift+P` →「**Configure Display Language**」から `en` を選択します。
+
 ## 検証（Verification）
 
 このリポジトリはDevContainer環境の検証に特化しています。コンテナ生成時に`scripts/verify.sh`が自動実行され、以下を確認します:

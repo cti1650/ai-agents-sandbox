@@ -11,6 +11,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "MS-CEINTL.vscode-language-pack-ja",
         "ms-azuretools.vscode-docker",
         "github.copilot",
         "dbaeumer.vscode-eslint",
@@ -18,7 +19,8 @@
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "locale": "ja"
       }
     }
   },
