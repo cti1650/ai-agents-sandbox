@@ -82,7 +82,18 @@ cp .env.example .env
 bash scripts/verify.sh
 ```
 
-また、GitHub Actions（`.github/workflows/devcontainer-ci.yml`）が push / PR ごとにコンテナをビルドして`verify.sh`を実行するため、コンテナやバンドルしたCLIが壊れるとCIが失敗します。
+また、GitHub Actions（`.github/workflows/devcontainer-ci.yml`）が push / PR ごとにコンテナをビルドして`verify.sh`を実行するため、コンテナやバンドルしたCLIが壊れるとCIが失敗します。さらに `pin-check.yml` が、GitHub Action がコミットSHAに固定されているか（バージョンコメントとの一致も含めて）を検証します。
+
+## Pre-commitフック（シークレット検査）
+
+[secretlint](https://github.com/secretlint/secretlint) による秘密情報の混入チェックを、[lefthook](https://github.com/evilmartians/lefthook) の pre-commit フックで実行します。`npm install`（DevContainer生成時に自動実行）でフックが設定され、`git commit` 時にステージされたファイルがスキャンされます。
+
+```bash
+npm install        # 依存導入 + フック設定（lefthook install）
+npm run secretlint # 手動でリポジトリ全体をスキャン
+```
+
+APIキーやトークンを誤ってコミットしようとすると、コミットがブロックされます。
 
 ## セキュリティ設定
 

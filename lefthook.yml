@@ -1,0 +1,10 @@
+# Git hooks managed by lefthook. Installed via `lefthook install`
+# (run automatically by the package.json "prepare" script on npm install,
+# and by the devcontainer postCreateCommand).
+pre-commit:
+  parallel: true
+  commands:
+    secretlint:
+      # Scan only staged files for committed secrets/credentials.
+      glob: "*"
+      run: npx --no-install secretlint --maskSecrets {staged_files}

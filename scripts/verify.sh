@@ -136,6 +136,20 @@ else
 fi
 
 echo
+echo "-- Pre-commit hooks (info) --"
+# lefthook installs a pre-commit hook that runs secretlint on staged files.
+if [ -f node_modules/.bin/secretlint ] || command -v secretlint >/dev/null 2>&1; then
+  green "  [OK]   secretlint available"
+else
+  yellow "  [WARN] secretlint not installed (run 'npm install')"
+fi
+if grep -q 'lefthook' .git/hooks/pre-commit 2>/dev/null; then
+  green "  [OK]   lefthook pre-commit hook installed"
+else
+  yellow "  [WARN] pre-commit hook not installed (run 'npm install' or 'npx lefthook install')"
+fi
+
+echo
 echo "-- SSH config compatibility (info) --"
 # Host ~/.ssh/config is bind-mounted read-only. macOS-only options such as
 # 'UseKeychain' are rejected by Linux OpenSSH and break git over SSH.
