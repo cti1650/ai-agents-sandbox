@@ -13,6 +13,11 @@ services:
       # Git config (read-only)
       - ~/.gitconfig:/home/vscode/.gitconfig:ro
 
+      # Persist AI agent auth data across container rebuilds
+      - claude-auth:/home/vscode/.claude
+      - codex-auth:/home/vscode/.codex
+      - antigravity-auth:/home/vscode/.config/antigravity
+
     # Security: Drop unnecessary capabilities
     cap_drop:
       - ALL
@@ -45,3 +50,9 @@ services:
     env_file:
       - path: ../.env
         required: false
+
+# Named volumes for persisting auth data
+volumes:
+  claude-auth:
+  codex-auth:
+  antigravity-auth:
