@@ -1,0 +1,35 @@
+name: DevContainer CI
+
+# Build the DevContainer and run the verification smoke test on every push
+# to main and on pull requests. This is the core guarantee of this repo:
+# if the container or any bundled AI CLI breaks, the build goes red.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # docker-compose.yml bind-mounts ~/.ssh and ~/.gitconfig (read-only).
+      # On a fresh CI runner these may not exist; pre-create them so Docker
+      # doesn't auto-create ~/.gitconfig as a directory and break Git.
+      - name: Prepare host mounts
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.gitconfig
+
+      - name: Build devcontainer and run verification
+        uses: devcontainers/ci@v0.3
+        with:
+          configFile: .devcontainer/devcontainer.json
+          # postCreateCommand already runs verify.sh; run it again explicitly
+          # so the job's pass/fail is tied directly to the smoke test.
+          runCmd: bash scripts/verify.sh
+          push: never
