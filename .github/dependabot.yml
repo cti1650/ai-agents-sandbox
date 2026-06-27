@@ -22,3 +22,10 @@ updates:
     labels:
       - "dependencies"
       - "docker"
+    # node is the runtime foundation of the whole environment. Do not chase
+    # major bumps automatically (e.g. 24 -> 26); upgrade those deliberately
+    # after verifying the bundled CLIs. Patch/minor and digest updates within
+    # the current major are still proposed.
+    ignore:
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
