@@ -113,6 +113,29 @@ else
 fi
 
 echo
+echo "-- Python (info) --"
+# 'python' is provided by the python-is-python3 package (rebuild image if missing).
+if command -v python >/dev/null 2>&1; then
+  green "  [OK]   python -> $(python --version 2>&1)"
+else
+  yellow "  [WARN] 'python' not found (install python-is-python3 / rebuild image)"
+fi
+# Expected system Python minor series; surfaces drift from the pinned base image.
+py_ver=$(python3 -c 'import sys;print("%d.%d"%sys.version_info[:2])' 2>/dev/null)
+if [ "$py_ver" = "3.11" ]; then
+  green "  [OK]   python3 is 3.11.x ($(python3 --version 2>&1 | awk '{print $2}'))"
+else
+  yellow "  [WARN] python3 is ${py_ver:-unknown} (expected 3.11.x from the pinned base image)"
+fi
+# pip should route through the Takumi Guard PyPI proxy (blocking + 3-day quarantine).
+pip_index=$(python3 -m pip config get global.index-url 2>/dev/null)
+if printf '%s' "$pip_index" | grep -q 'pypi.flatt.tech'; then
+  green "  [OK]   pip index routed through Takumi Guard ($pip_index)"
+else
+  yellow "  [WARN] pip index is not Takumi Guard (got: ${pip_index:-<default>}); check PIP_CONFIG_FILE"
+fi
+
+echo
 echo "-- SSH config compatibility (info) --"
 # Host ~/.ssh/config is bind-mounted read-only. macOS-only options such as
 # 'UseKeychain' are rejected by Linux OpenSSH and break git over SSH.

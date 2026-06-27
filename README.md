@@ -72,6 +72,12 @@ bash scripts/verify.sh
 - npmサプライチェーン対策（`.npmrc`）:
   - [Takumi Guard](https://shisho.dev/docs/ja/t/guard/quickstart/npm/)（匿名モード）で悪性パッケージをインストール前にブロック
   - `min-release-age=3` で公開3日未満のバージョンを隔離（要 npm 11.10.0+）
+- PyPIサプライチェーン対策（`pip.conf`, `PIP_CONFIG_FILE`で適用）:
+  - [Takumi Guard for PyPI](https://shisho.dev/docs/ja/t/guard/quickstart/pypi/)（匿名モード）で悪性パッケージをブロック
+  - プロキシ側で新規公開バージョンを**自動で72時間（3日）隔離**（pip側の追加設定は不要）
+
+> Python は `python` / `python3` の両方で実行可能（`python-is-python3` 導入済み）。
+> パッケージ導入は PEP 668 のため venv 推奨: `python3 -m venv .venv && source .venv/bin/activate`
 
 ## 使用方法
 
