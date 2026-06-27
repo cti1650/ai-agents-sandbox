@@ -126,3 +126,7 @@ agy
 # VSCodeコマンドパレットから
 Dev Containers: Rebuild Container
 ```
+
+## ライセンス
+
+[MIT License](LICENSE) のもとで公開しています。
