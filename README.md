@@ -16,7 +16,7 @@
 - Visual Studio Code
 - [Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-macOS / Windows のどちらでも動作します。改行コードは `.gitattributes` でLFに正規化しているため、Windows でクローンしてもスクリプトは壊れません。
+macOS / Windows のどちらでも、**事前準備なし**で動作します（Git/SSH は VS Code が自動共有）。改行コードは `.gitattributes` でLFに正規化しているため、Windows でクローンしてもスクリプトは壊れません。
 
 ## クイックスタート（OS別）
 
@@ -33,13 +33,11 @@ macOS / Windows のどちらでも動作します。改行コードは `.gitattr
    cd ai-agents-sandbox
    ```
 
-3. **事前準備**（マウント先の用意と環境変数）
+3. **環境変数（任意）**
    ```bash
-   mkdir -p ~/.ssh
-   touch ~/.gitconfig        # 無いと Docker がディレクトリ化して Git が壊れる
    cp .env.example .env      # 必要なら API キーを記入（任意）
    ```
-   > `~/.ssh/config` に `UseKeychain` がある場合は、`Host *` に `IgnoreUnknown UseKeychain` を追加してください（コンテナ内のLinux SSHは非対応のため）。
+   事前準備はこれだけです。SSHキーやGit設定の手動作成は不要です（後述の「Git / SSH の共有」を参照）。
 
 4. **コンテナで開く**
    ```bash
@@ -71,12 +69,11 @@ macOS / Windows のどちらでも動作します。改行コードは `.gitattr
    ```
    > `C:\...`（Windows側）ではなく WSL2 内（`~/` 配下）に置くとマウントが高速で安定します。
 
-4. **事前準備**（WSL ターミナル内で実行）
+4. **環境変数（任意・WSL ターミナル内で実行）**
    ```bash
-   mkdir -p ~/.ssh
-   touch ~/.gitconfig
    cp .env.example .env
    ```
+   事前準備はこれだけです。SSHキーやGit設定の手動作成は不要です。
 
 5. **コンテナで開く**
    ```bash
@@ -84,14 +81,18 @@ macOS / Windows のどちらでも動作します。改行コードは `.gitattr
    ```
    VS Code が WSL に接続して起動します。`Ctrl+Shift+P` →「**Dev Containers: Reopen in Container**」を選択。
 
-### ホスト設定のマウントについて
+### Git / SSH の共有について
 
-ホストの以下が読み取り専用でコンテナにマウントされます。各AIツールの認証はコンテナ内で個別に行ってください。
+ホストの `~/.ssh` や `~/.gitconfig` は**マウントしません**。VS Code Dev Containers が以下を自動で行うため、**事前準備は不要**です:
 
-- `~/.ssh` - SSHキー（Git操作用）
-- `~/.gitconfig` - Git設定
+- **Git設定** … ホストの `~/.gitconfig`（ユーザー名・メール等）を自動でコンテナに反映
+- **SSH** … ホストで起動中の **SSHエージェントを自動フォワード**（鍵をコンテナにコピーしません）
 
-> `.env` は任意です（使うエージェントの分のキーだけでOK）。各CLIはコンテナ内で対話的にも認証できます。
+> Git を SSH（`git@github.com:...`）で使う場合は、ホストの **ssh-agent に鍵が登録**されている必要があります（macOS は Keychain 連携で通常自動登録、Windows は `OpenSSH Authentication Agent` サービスを有効化）。HTTPSリモートの場合は VS Code の資格情報共有が使われます。
+>
+> この方式により、空ファイルの事前作成や macOS の `UseKeychain` 回避は不要になりました。
+>
+> 各AIツール（claude / codex / agy）の認証はコンテナ内で個別に行ってください（認証データは named volume に永続化されます）。`.env` は任意です。
 
 ## 検証（Verification）
 
@@ -128,7 +129,7 @@ APIキーやトークンを誤ってコミットしようとすると、コミ�
 - 不要なLinux capabilitiesの削除
 - 特権昇格の禁止（no-new-privileges）
 - リソース制限（メモリ4GB、CPU 2コア）
-- ホスト設定の読み取り専用マウント
+- ホストSSH鍵をコンテナへ展開せず、SSHエージェント転送を利用（VS Code 自動共有）
 - npmサプライチェーン対策（`.npmrc`）:
   - [Takumi Guard](https://shisho.dev/docs/ja/t/guard/quickstart/npm/)（匿名モード）で悪性パッケージをインストール前にブロック
   - `min-release-age=3` で公開3日未満のバージョンを隔離（要 npm 11.10.0+）

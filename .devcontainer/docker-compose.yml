@@ -7,11 +7,10 @@ services:
       # Workspace
       - ..:/workspaces/${LOCAL_WORKSPACE_FOLDER_BASENAME:-ai-agents-sandbox}:cached
 
-      # Mount host SSH keys (read-only for security)
-      - ~/.ssh:/home/vscode/.ssh:ro
-
-      # Git config (read-only)
-      - ~/.gitconfig:/home/vscode/.gitconfig:ro
+      # NOTE: host ~/.ssh and ~/.gitconfig are intentionally NOT bind-mounted.
+      # VS Code Dev Containers shares Git config and forwards the SSH agent
+      # automatically, so no host-side pre-creation is required and the macOS
+      # "UseKeychain" config no longer breaks SSH inside the container.
 
       # Persist AI agent auth data across container rebuilds
       - claude-auth:/home/vscode/.claude
