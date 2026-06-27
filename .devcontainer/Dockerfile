@@ -1,7 +1,9 @@
 # AI Agents Sandbox - Secure DevContainer
 # Claude Code, Codex CLI, Antigravity CLI
 
-FROM node:24-bookworm-slim
+# Pinned to a patch version + digest for reproducible builds.
+# To update: bump the tag and re-resolve the digest for node:<tag>.
+FROM node:24.18.0-bookworm-slim@sha256:b31e7a42fdf8b8aa5f5ed477c72d694301273f1069c5a2f71d53c6482e99a2fc
 
 # Avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -53,11 +55,14 @@ RUN mkdir -p /home/$USERNAME/.npm-global \
     && mkdir -p /home/$USERNAME/.config/antigravity \
     && mkdir -p /home/$USERNAME/.ssh
 
-# Install Claude Code and Codex CLI via npm
-RUN npm install -g @anthropic-ai/claude-code \
-    && npm install -g @openai/codex
+# Install Claude Code and Codex CLI via npm (pinned versions)
+RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
+    && npm install -g @openai/codex@0.142.3
 
-# Install Antigravity CLI via official script
+# Install Antigravity CLI via official script.
+# NOTE: the official installer always fetches the latest release and offers
+# no version-pin option, so this step is intentionally unpinned. It does
+# verify a sha512 of the download against the release manifest.
 RUN curl -fsSL https://antigravity.google/cli/install.sh | bash
 
 # Set working directory

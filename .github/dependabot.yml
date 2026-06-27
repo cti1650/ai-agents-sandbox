@@ -11,3 +11,14 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+
+  # Keep the pinned base image (FROM ...@sha256) digest current.
+  - package-ecosystem: "docker"
+    directory: "/.devcontainer"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "build"
+    labels:
+      - "dependencies"
+      - "docker"
