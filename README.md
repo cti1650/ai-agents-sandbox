@@ -12,11 +12,35 @@
 
 ## 必要要件
 
-- Docker Desktop
+- Docker Desktop（**8GB以上のメモリ割当**を推奨。`docker-compose.yml` でコンテナに最大メモリ8GB / CPU4コアを割り当てます。Docker Desktop の割当がこれ未満だと起動失敗や強い制約がかかります）
 - Visual Studio Code
 - [Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
+macOS / Windows のどちらでも動作します。改行コードは `.gitattributes` でLFに正規化しているため、Windows でクローンしてもスクリプトは壊れません。
+
 ## セットアップ
+
+### 0. 事前準備（OS別）
+
+ホストの `~/.ssh` と `~/.gitconfig` を読み取り専用でマウントします。**ファイルが存在しないと Docker が同名ディレクトリを自動生成して Git/SSH が壊れる**ため、初回は空ファイルを用意してください。
+
+**macOS / Linux:**
+
+```bash
+mkdir -p ~/.ssh
+touch ~/.gitconfig
+```
+
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.ssh" | Out-Null
+New-Item -ItemType File -Force -Path "$env:USERPROFILE\.gitconfig" | Out-Null
+```
+
+> SSH鍵でGit操作する場合は、各OSのユーザーホーム直下（`~/.ssh`）に鍵を配置してください。
+> macOSの `~/.ssh/config` に `UseKeychain` がある場合、コンテナ内のLinux SSHでは非対応です。
+> ホスト側configの `Host *` に `IgnoreUnknown UseKeychain` を追加すると回避できます（`verify.sh` でも検知されます）。
 
 ### 1. 環境変数の設定
 

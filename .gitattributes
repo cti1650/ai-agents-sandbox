@@ -1,0 +1,18 @@
+# All files in this repo are consumed inside a Linux container, so normalize
+# line endings to LF regardless of the host OS. This prevents Windows
+# checkouts (Git default core.autocrlf=true) from rewriting files to CRLF,
+# which would break bash scripts ("bash: \r: command not found").
+* text=auto eol=lf
+
+# Scripts and config files that MUST be LF to work in the container.
+*.sh    text eol=lf
+.npmrc  text eol=lf
+*.conf  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.json  text eol=lf
+
+# Treat common binary types as binary so they are never normalized.
+*.png   binary
+*.jpg   binary
+*.gz    binary
