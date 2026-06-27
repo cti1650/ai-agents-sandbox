@@ -113,6 +113,22 @@ else
 fi
 
 echo
+echo "-- SSH config compatibility (info) --"
+# Host ~/.ssh/config is bind-mounted read-only. macOS-only options such as
+# 'UseKeychain' are rejected by Linux OpenSSH and break git over SSH.
+if ! command -v ssh >/dev/null 2>&1; then
+  yellow "  [WARN] ssh client not found (skipping)"
+elif [ ! -f "$HOME/.ssh/config" ]; then
+  green "  [OK]   no ~/.ssh/config (nothing to validate)"
+elif ssh_err=$(ssh -G github.com 2>&1 >/dev/null); then
+  green "  [OK]   ~/.ssh/config parses cleanly"
+else
+  yellow "  [WARN] ~/.ssh/config has options unsupported on Linux:"
+  printf '%s\n' "$ssh_err" | sed 's/^/           /'
+  yellow "         Fix on the host config: add under 'Host *':  IgnoreUnknown UseKeychain"
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
   green "== Verification PASSED =="
 else
