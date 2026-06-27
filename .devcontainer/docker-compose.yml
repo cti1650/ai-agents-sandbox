@@ -1,0 +1,52 @@
+services:
+  ai-sandbox:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Workspace
+      - ..:/workspaces/${LOCAL_WORKSPACE_FOLDER_BASENAME:-ai-agents-sandbox}:cached
+
+      # Mount host SSH keys (read-only for security)
+      - ~/.ssh:/home/vscode/.ssh:ro
+
+      # Mount global AI agent configurations (read-only)
+      - ~/.claude:/home/vscode/.claude:ro
+      - ~/.codex:/home/vscode/.codex:ro
+      - ~/.config/antigravity:/home/vscode/.config/antigravity:ro
+
+      # Git config (read-only)
+      - ~/.gitconfig:/home/vscode/.gitconfig:ro
+
+    # Security: Drop unnecessary capabilities
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+
+    # Security: Read-only root filesystem (with tmpfs for writable areas)
+    read_only: false  # Set to true for maximum security, but may break some tools
+    tmpfs:
+      - /tmp:exec,mode=1777
+      - /run:exec,mode=1777
+
+    # Security: No privilege escalation
+    security_opt:
+      - no-new-privileges:true
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: "4"
+
+    # Keep container running
+    command: sleep infinity
+
+    # Environment variables (loaded from .env file if exists)
+    env_file:
+      - path: ../.env
+        required: false
