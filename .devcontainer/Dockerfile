@@ -39,7 +39,7 @@ RUN usermod -l $USERNAME -d /home/$USERNAME -m node \
 
 # Set npm global directory for non-root user
 ENV NPM_CONFIG_PREFIX=/home/$USERNAME/.npm-global
-ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
+ENV PATH=/home/$USERNAME/.local/bin:$NPM_CONFIG_PREFIX/bin:$PATH
 
 # Switch to non-root user
 USER $USERNAME
@@ -47,15 +47,18 @@ WORKDIR /home/$USERNAME
 
 # Create necessary directories
 RUN mkdir -p /home/$USERNAME/.npm-global \
+    && mkdir -p /home/$USERNAME/.local/bin \
     && mkdir -p /home/$USERNAME/.claude \
     && mkdir -p /home/$USERNAME/.codex \
     && mkdir -p /home/$USERNAME/.config/antigravity \
     && mkdir -p /home/$USERNAME/.ssh
 
-# Install AI CLI tools globally
+# Install Claude Code and Codex CLI via npm
 RUN npm install -g @anthropic-ai/claude-code \
-    && npm install -g @openai/codex \
-    && npm install -g @google/antigravity
+    && npm install -g @openai/codex
+
+# Install Antigravity CLI via official script
+RUN curl -fsSL https://antigravity.google/cli/install.sh | bash
 
 # Set working directory
 WORKDIR /workspaces
