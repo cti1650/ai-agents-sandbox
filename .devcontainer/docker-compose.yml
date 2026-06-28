@@ -86,7 +86,12 @@ services:
     # Keep container running
     command: sleep infinity
 
-    # Environment variables (loaded from .env file if exists)
+    # Environment variables
+    environment:
+      # Takumi Guard for PyPI - blocks malicious packages + 72h quarantine
+      - PIP_CONFIG_FILE=/workspaces/${LOCAL_WORKSPACE_FOLDER_BASENAME:-ai-agents-sandbox}/pip.conf
+
+    # Additional environment variables (loaded from .env file if exists)
     env_file:
       - path: ../.env
         required: false
