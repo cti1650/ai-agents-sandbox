@@ -29,7 +29,7 @@
 
   "remoteUser": "vscode",
 
-  "postCreateCommand": "cd .. && npm install && cp scripts/global-pre-commit ~/.config/git/hooks/pre-commit && chmod +x ~/.config/git/hooks/pre-commit && bash scripts/verify.sh",
+  "postCreateCommand": "cd .. && npm install && cp scripts/global-pre-commit ~/.config/git/hooks/pre-commit && chmod +x ~/.config/git/hooks/pre-commit && git config --global core.hooksPath ~/.config/git/hooks && bash scripts/verify.sh",
 
   "forwardPorts": [],
 

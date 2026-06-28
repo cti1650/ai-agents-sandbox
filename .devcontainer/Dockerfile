@@ -63,9 +63,6 @@ RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
     && npm install -g lefthook \
     && npm install -g secretlint @secretlint/secretlint-rule-preset-recommend
 
-# Set up global git hooks for secretlint
-RUN git config --global core.hooksPath /home/$USERNAME/.config/git/hooks
-
 # Install Antigravity CLI via official script.
 # NOTE: the official installer always fetches the latest release and offers
 # no version-pin option, so this step is intentionally unpinned. It does
