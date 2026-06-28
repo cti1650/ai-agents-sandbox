@@ -1,0 +1,89 @@
+# Codex CLI - Container Autonomous Settings
+# This config enables autonomous execution within the DevContainer.
+# Security is provided by container isolation + deny rules.
+
+# Auto-approve all operations (container is isolated)
+approval_policy = "never"
+
+# Allow writes to workspace (safe within container)
+sandbox_mode = "workspace-write"
+
+[features]
+# Network proxy settings can be added here if needed
+
+[rules]
+# Block dangerous commands
+[[rules.commands]]
+pattern = "rm -rf /"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "rm -rf ~"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "rm -rf /*"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "sudo *"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "chmod -R 777 /"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "curl * | bash"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "curl * | sh"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "wget * | bash"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "wget * | sh"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "npm publish*"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "pnpm publish*"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "git push --force*"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "git push -f *"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "git reset --hard*"
+decision = "forbidden"
+
+[[rules.commands]]
+pattern = "git clean -fd*"
+decision = "forbidden"
+
+[permissions.container]
+# Deny reading sensitive files
+filesystem = [
+  { path = "**/.env", access = "deny" },
+  { path = "**/.env.local", access = "deny" },
+  { path = "**/.env.*.local", access = "deny" },
+  { path = "**/secrets/**", access = "deny" },
+  { path = "**/*credentials*", access = "deny" },
+  { path = "**/*.pem", access = "deny" },
+  { path = "**/*.key", access = "deny" },
+  { path = "**/id_rsa*", access = "deny" },
+  { path = "/etc/shadow", access = "deny" },
+  { path = "/etc/passwd", access = "deny" },
+]
