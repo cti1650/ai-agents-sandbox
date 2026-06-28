@@ -150,11 +150,16 @@ APIキーやトークンを誤ってコミットしようとすると、コミ�
 
 ### 作業ディレクトリ
 
-コンテナ内での作業は **`workspace/`** フォルダ内で行ってください。このフォルダは Git 管理外なので、自由にファイルを作成・編集できます。
+DevContainer起動時、VS Codeは **`workspace/`** フォルダを直接開きます。このフォルダは Git 管理外なので、自由にファイルを作成・編集できます。
 
 ```bash
-cd workspace
-# ここで claude / codex / agy を使って作業
+# 現在地は workspace/ フォルダ
+pwd  # /workspaces/ai-agents-sandbox/workspace
+
+# リポジトリルート（README等）にアクセスする場合
+cd $REPO_ROOT
+# または
+cd ..
 ```
 
 ### AI CLIの実行
