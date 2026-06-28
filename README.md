@@ -110,6 +110,8 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 | `keybindings.json` | キーボードショートカット |
 | `CLAUDE.md` | 個人用グローバル指示 |
 
+> **プラグインについて**: Claude Code のプラグイン（`~/.claude/plugins/` の本体と有効化情報）はホストからマウントされません。代わりに `.devcontainer/claude-settings.json` の `enabledPlugins` / `extraKnownMarketplaces` で宣言し、`postCreateCommand` の `claude plugin install` でセットアップします。プラグイン由来のスキルを追加したい場合は同ファイルに追記してください。
+
 #### Codex CLI (`~/.codex/`)
 
 | ファイル/ディレクトリ | 用途 |
