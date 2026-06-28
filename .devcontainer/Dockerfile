@@ -64,9 +64,9 @@ RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
     && npm install -g secretlint @secretlint/secretlint-rule-preset-recommend
 
 # Install gitleaks for additional secret scanning
-# Note: Using amd64 binary; for arm64 hosts, change to gitleaks_*_linux_arm64.tar.gz
+# Note: Using x64 binary; for arm64 hosts, change to gitleaks_*_linux_arm64.tar.gz
 ARG GITLEAKS_VERSION=8.30.1
-RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_amd64.tar.gz" \
+RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
     | tar -xz -C /home/$USERNAME/.local/bin gitleaks
 
 # Set up global git hooks for secretlint
