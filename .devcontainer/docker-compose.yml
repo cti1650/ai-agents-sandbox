@@ -17,6 +17,15 @@ services:
       - codex-auth:/home/vscode/.codex
       - antigravity-auth:/home/vscode/.config/antigravity
 
+      # Mount Claude Code config from host (read-only, overlays on top of named volume)
+      # Symlinks in ~/.claude are resolved by Docker automatically
+      - ~/.claude/skills:/home/vscode/.claude/skills:ro
+      - ~/.claude/agents:/home/vscode/.claude/agents:ro
+      - ~/.claude/rules:/home/vscode/.claude/rules:ro
+      - ~/.claude/commands:/home/vscode/.claude/commands:ro
+      - ~/.claude/docs:/home/vscode/.claude/docs:ro
+      - ~/.claude/settings.json:/home/vscode/.claude/settings.json:ro
+
     # Security: Drop unnecessary capabilities
     cap_drop:
       - ALL

@@ -91,8 +91,23 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 > Git を SSH（`git@github.com:...`）で使う場合は、ホストの **ssh-agent に鍵が登録**されている必要があります（macOS は Keychain 連携で通常自動登録、Windows は `OpenSSH Authentication Agent` サービスを有効化）。HTTPSリモートの場合は VS Code の資格情報共有が使われます。
 >
 > この方式により、空ファイルの事前作成や macOS の `UseKeychain` 回避は不要になりました。
->
-> 各AIツール（claude / codex / agy）の認証はコンテナ内で個別に行ってください（認証データは named volume に永続化されます）。`.env` は任意です。
+
+### Claude Code 設定の共有
+
+ホストの `~/.claude/` から以下の設定がコンテナにマウントされます（読み取り専用）:
+
+| ディレクトリ | 用途 |
+|-------------|------|
+| `skills/` | カスタムスキル |
+| `agents/` | カスタムエージェント |
+| `rules/` | カスタムルール |
+| `commands/` | カスタムコマンド |
+| `docs/` | ドキュメント |
+| `settings.json` | 設定ファイル |
+
+**認証データは別管理**: 認証情報は named volume に保存されるため、設定の共有とは独立しています。初回のみコンテナ内で `/login` が必要ですが、以降はコンテナを再ビルドしても認証が維持されます。
+
+> シンボリックリンク（dotfiles等）は Docker が自動的に解決します。
 
 ## VS Codeの日本語化
 
