@@ -8,7 +8,7 @@
     "ghcr.io/devcontainers/features/git:1": {}
   },
 
-  "initializeCommand": "mkdir -p workspace",
+  "initializeCommand": "mkdir -p workspace && mkdir -p ~/.claude/{skills,agents,rules,commands,workflows,output-styles,themes} && touch ~/.claude/{keybindings.json,CLAUDE.md} && mkdir -p ~/.codex/{skills,plugins,rules} && touch ~/.codex/AGENTS.md && mkdir -p ~/.gemini/{config,skills,antigravity-cli/{skills,plugins}} && touch ~/.gemini/{GEMINI.md,AGENTS.md} && touch ~/.gemini/antigravity-cli/keybindings.json",
 
   "customizations": {
     "vscode": {
@@ -29,7 +29,7 @@
 
   "remoteUser": "vscode",
 
-  "postCreateCommand": "cd .. && npm install && cp scripts/global-pre-commit ~/.config/git/hooks/pre-commit && chmod +x ~/.config/git/hooks/pre-commit && git config --global core.hooksPath ~/.config/git/hooks && cp .devcontainer/claude-settings.json ~/.claude/settings.json && cp .devcontainer/codex-config.toml ~/.codex/config.toml && mkdir -p ~/.gemini/antigravity-cli && cp .devcontainer/antigravity-settings.json ~/.gemini/antigravity-cli/settings.json && cp .devcontainer/.tmux.conf ~/.tmux.conf && bash scripts/verify.sh",
+  "postCreateCommand": "cd .. && npm install && cp scripts/global-pre-commit ~/.config/git/hooks/pre-commit && chmod +x ~/.config/git/hooks/pre-commit && git config --global core.hooksPath ~/.config/git/hooks && chmod -R u+w ~/.claude ~/.codex ~/.gemini 2>/dev/null || true && cp .devcontainer/claude-settings.json ~/.claude/settings.json && cp .devcontainer/codex-config.toml ~/.codex/config.toml && mkdir -p ~/.gemini/antigravity-cli && cp .devcontainer/antigravity-settings.json ~/.gemini/antigravity-cli/settings.json && cp .devcontainer/.tmux.conf ~/.tmux.conf && bash scripts/verify.sh",
 
   "forwardPorts": [],
 
