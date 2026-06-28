@@ -73,17 +73,22 @@ decision = "forbidden"
 pattern = "git clean -fd*"
 decision = "forbidden"
 
-[permissions.container]
-# Deny reading sensitive files
-filesystem = [
-  { path = "**/.env", access = "deny" },
-  { path = "**/.env.local", access = "deny" },
-  { path = "**/.env.*.local", access = "deny" },
-  { path = "**/secrets/**", access = "deny" },
-  { path = "**/*credentials*", access = "deny" },
-  { path = "**/*.pem", access = "deny" },
-  { path = "**/*.key", access = "deny" },
-  { path = "**/id_rsa*", access = "deny" },
-  { path = "/etc/shadow", access = "deny" },
-  { path = "/etc/passwd", access = "deny" },
-]
+# Activate the "container" permission profile below.
+default_permissions = "container"
+
+# Deny reading sensitive files.
+# NOTE: codex expects `filesystem` to be a TABLE keyed by glob -> access mode
+# (read|write|deny), NOT an array of { path, access } entries. Using an array
+# fails config loading with: invalid type: sequence, expected struct
+# FilesystemPermissionsToml in `permissions`, which prevents codex from starting.
+[permissions.container.filesystem]
+"**/.env"          = "deny"
+"**/.env.local"    = "deny"
+"**/.env.*.local"  = "deny"
+"**/secrets/**"    = "deny"
+"**/*credentials*" = "deny"
+"**/*.pem"         = "deny"
+"**/*.key"         = "deny"
+"**/id_rsa*"       = "deny"
+"/etc/shadow"      = "deny"
+"/etc/passwd"      = "deny"
