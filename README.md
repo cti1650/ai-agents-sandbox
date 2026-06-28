@@ -107,7 +107,6 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 | `workflows/` | 動的ワークフロースクリプト |
 | `output-styles/` | カスタム出力フォーマット |
 | `themes/` | カスタムカラーテーマ |
-| `settings.json` | ユーザー設定 |
 | `keybindings.json` | キーボードショートカット |
 | `CLAUDE.md` | 個人用グローバル指示 |
 
@@ -115,7 +114,6 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 
 | ファイル/ディレクトリ | 用途 |
 |----------------------|------|
-| `config.toml` | グローバル設定 |
 | `AGENTS.md` | グローバル指示 |
 | `skills/` | カスタムスキル |
 | `plugins/` | プラグイン |
@@ -129,12 +127,13 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 | `AGENTS.md` | クロスツール共有ルール |
 | `config/` | 共有MCP設定 |
 | `skills/` | 全ツール共有スキル |
-| `antigravity-cli/settings.json` | CLI設定 |
 | `antigravity-cli/keybindings.json` | キーバインド |
 | `antigravity-cli/skills/` | CLI専用スキル |
 | `antigravity-cli/plugins/` | プラグイン |
 
 **認証データは別管理**: 認証情報は named volume に保存されるため、設定の共有とは独立しています。初回のみコンテナ内で `/login` が必要ですが、以降はコンテナを再ビルドしても認証が維持されます。
+
+> **Note**: 各ツールの設定ファイル（Claude Code の `settings.json`、Codex CLI の `config.toml`、Antigravity CLI の `settings.json`）はコンテナにマウントされません。コンテナ内では自律実行用の専用設定（`.devcontainer/` 配下）が使用されます。
 
 > シンボリックリンク（dotfiles等）は Docker が自動的に解決します。
 
@@ -241,6 +240,46 @@ codex
 # Antigravity CLI
 agy
 ```
+
+### 自律実行モード（Autonomous Mode）
+
+このDevContainer環境は、AIエージェントの**自律実行**に最適化されています。ターミナルを閉じてもAIが作業を継続できます。
+
+#### クイックスタート
+
+1. **スリープ防止（ホスト側）**
+   ```bash
+   # macOS
+   caffeinate -di &
+
+   # Windows (PowerShell 管理者)
+   powercfg /setacvalueindex SCHEME_CURRENT SUB_BUTTONS LIDACTION 0
+   powercfg /setactive SCHEME_CURRENT
+   ```
+
+2. **tmuxセッション開始**
+   ```bash
+   ./scripts/start-session.sh              # デフォルトセッション
+   ./scripts/start-session.sh feature-auth # 名前付きセッション
+   ```
+
+3. **デタッチ**: `Ctrl+b` → `d`（セッション継続したままターミナルを閉じる）
+
+4. **再接続**: `tmux attach -t ai-agent`
+
+#### コンテナ専用の自律実行設定
+
+コンテナ内では各ツールが自律実行モードで動作し、ほとんどの操作が承認なしで実行されます:
+
+| ツール | モード |
+|--------|--------|
+| Claude Code | `bypassPermissions` |
+| Codex CLI | `approval_policy = "never"` |
+| Antigravity CLI | `toolPermission: "always-proceed"` |
+
+セキュリティはコンテナの隔離環境と `deny` ルール（機密ファイル読取、破壊的コマンド、sudo等のブロック）で担保されます。
+
+詳細は [AUTONOMOUS.md](AUTONOMOUS.md) を参照してください。
 
 ### DevContainerの終了
 
