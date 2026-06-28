@@ -178,14 +178,20 @@ APIキーやトークンを誤ってコミットしようとすると、コミ�
 - 非rootユーザーでの実行
 - 不要なLinux capabilitiesの削除
 - 特権昇格の禁止（no-new-privileges）
-- リソース制限（メモリ4GB、CPU 2コア）
+- リソース制限（メモリ4GB、CPU 2コア、プロセス数256）
+- コンテナヘルスチェック（30秒間隔）
 - ホストSSH鍵をコンテナへ展開せず、SSHエージェント転送を利用（VS Code 自動共有）
+- 多層シークレットスキャン:
+  - [secretlint](https://github.com/secretlint/secretlint): APIキー・トークンの検出
+  - [gitleaks](https://github.com/gitleaks/gitleaks): Git履歴とステージ変更のスキャン
 - npmサプライチェーン対策（`.npmrc`）:
   - [Takumi Guard](https://shisho.dev/docs/ja/t/guard/quickstart/npm/)（匿名モード）で悪性パッケージをインストール前にブロック
   - `min-release-age=3` で公開3日未満のバージョンを隔離（要 npm 11.10.0+）
 - PyPIサプライチェーン対策（`pip.conf`, `PIP_CONFIG_FILE`で適用）:
   - [Takumi Guard for PyPI](https://shisho.dev/docs/ja/t/guard/quickstart/pypi/)（匿名モード）で悪性パッケージをブロック
   - プロキシ側で新規公開バージョンを**自動で72時間（3日）隔離**（pip側の追加設定は不要）
+
+詳細は [SECURITY.md](SECURITY.md) を参照してください。
 
 > Python は `python` / `python3` の両方で実行可能（`python-is-python3` 導入済み）。
 > パッケージ導入は PEP 668 のため venv 推奨: `python3 -m venv .venv && source .venv/bin/activate`

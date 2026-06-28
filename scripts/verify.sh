@@ -136,17 +136,32 @@ else
 fi
 
 echo
-echo "-- Pre-commit hooks (info) --"
-# lefthook installs a pre-commit hook that runs secretlint on staged files.
+echo "-- Secret scanners (info) --"
+# secretlint and gitleaks for layered secret detection
 if [ -f node_modules/.bin/secretlint ] || command -v secretlint >/dev/null 2>&1; then
   green "  [OK]   secretlint available"
 else
   yellow "  [WARN] secretlint not installed (run 'npm install')"
 fi
+if command -v gitleaks >/dev/null 2>&1; then
+  green "  [OK]   gitleaks available ($(gitleaks version 2>/dev/null || echo 'unknown'))"
+else
+  yellow "  [WARN] gitleaks not installed"
+fi
+
+echo
+echo "-- Pre-commit hooks (info) --"
+# lefthook installs a pre-commit hook that runs secretlint on staged files.
 if grep -q 'lefthook' .git/hooks/pre-commit 2>/dev/null; then
   green "  [OK]   lefthook pre-commit hook installed"
 else
   yellow "  [WARN] pre-commit hook not installed (run 'npm install' or 'npx lefthook install')"
+fi
+# Global git hooks for workspace repos
+if [ -f "$HOME/.config/git/hooks/pre-commit" ]; then
+  green "  [OK]   global pre-commit hook installed"
+else
+  yellow "  [WARN] global pre-commit hook not found"
 fi
 
 echo

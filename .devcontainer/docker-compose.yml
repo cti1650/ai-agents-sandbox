@@ -73,6 +73,15 @@ services:
         limits:
           memory: 4G
           cpus: "2"
+          pids: 256  # Prevent fork bombs
+
+    # Health check to verify container is working
+    healthcheck:
+      test: ["CMD", "node", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
     # Keep container running
     command: sleep infinity

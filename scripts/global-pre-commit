@@ -1,10 +1,13 @@
 #!/bin/bash
-# Global pre-commit hook for secretlint
-# This hook runs secretlint on staged files to prevent committing secrets
+# Global pre-commit hook for secret scanning
+# This hook runs multiple scanners (secretlint, gitleaks) on staged files
+# to prevent committing secrets
 #
 # If the repo has lefthook configured, delegate to lefthook instead.
 # This allows repos with their own hooks (like ai-agents-sandbox) to use lefthook,
 # while repos without hooks (like projects in workspace/) still get secretlint protection.
+
+set -e
 
 # Check if this repo has lefthook configured
 if [ -f "lefthook.yml" ] || [ -f ".lefthook.yml" ]; then
@@ -14,26 +17,36 @@ if [ -f "lefthook.yml" ] || [ -f ".lefthook.yml" ]; then
   fi
 fi
 
-# No lefthook - run secretlint directly
+# No lefthook - run secret scanners directly
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
 if [ -z "$STAGED_FILES" ]; then
   exit 0
 fi
 
-# Check if secretlint is available
+EXIT_CODE=0
+
+# Run secretlint if available
 if command -v secretlint &> /dev/null; then
   echo "Running secretlint on staged files..."
-  echo "$STAGED_FILES" | xargs secretlint
-  exit $?
+  if ! echo "$STAGED_FILES" | xargs secretlint; then
+    EXIT_CODE=1
+  fi
 elif command -v npx &> /dev/null; then
-  # Try to run via npx if secretlint config exists in repo
   if [ -f ".secretlintrc.json" ] || [ -f ".secretlintrc" ] || [ -f ".secretlintrc.js" ]; then
     echo "Running secretlint via npx on staged files..."
-    echo "$STAGED_FILES" | xargs npx secretlint
-    exit $?
+    if ! echo "$STAGED_FILES" | xargs npx secretlint; then
+      EXIT_CODE=1
+    fi
   fi
 fi
 
-# secretlint not available, skip silently
-exit 0
+# Run gitleaks if available (scans staged changes only)
+if command -v gitleaks &> /dev/null; then
+  echo "Running gitleaks on staged changes..."
+  if ! gitleaks protect --staged --no-banner; then
+    EXIT_CODE=1
+  fi
+fi
+
+exit $EXIT_CODE
