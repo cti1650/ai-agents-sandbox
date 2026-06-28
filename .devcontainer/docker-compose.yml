@@ -26,6 +26,14 @@ services:
       - ~/.claude/docs:/home/vscode/.claude/docs:ro
       - ~/.claude/settings.json:/home/vscode/.claude/settings.json:ro
 
+      # Mount Codex CLI config from host (read-only, overlays on top of named volume)
+      - ~/.codex/instructions:/home/vscode/.codex/instructions:ro
+      - ~/.codex/agents:/home/vscode/.codex/agents:ro
+
+      # Mount Antigravity CLI config from host (read-only, overlays on top of named volume)
+      - ~/.config/antigravity/instructions:/home/vscode/.config/antigravity/instructions:ro
+      - ~/.config/antigravity/agents:/home/vscode/.config/antigravity/agents:ro
+
     # Security: Drop unnecessary capabilities
     cap_drop:
       - ALL
