@@ -54,12 +54,14 @@ RUN mkdir -p /home/$USERNAME/.npm-global \
     && mkdir -p /home/$USERNAME/.claude \
     && mkdir -p /home/$USERNAME/.codex \
     && mkdir -p /home/$USERNAME/.gemini/antigravity-cli \
-    && mkdir -p /home/$USERNAME/.ssh
+    && mkdir -p /home/$USERNAME/.ssh \
+    && mkdir -p /home/$USERNAME/.config/git/hooks
 
 # Install Claude Code, Codex CLI, and dev tools via npm (pinned versions)
 RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
     && npm install -g @openai/codex@0.142.3 \
-    && npm install -g lefthook
+    && npm install -g lefthook \
+    && npm install -g secretlint @secretlint/secretlint-rule-preset-recommend
 
 # Install Antigravity CLI via official script.
 # NOTE: the official installer always fetches the latest release and offers

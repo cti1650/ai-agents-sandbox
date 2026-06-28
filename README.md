@@ -194,7 +194,7 @@ APIキーやトークンを誤ってコミットしようとすると、コミ�
 
 ### 作業ディレクトリ
 
-DevContainer起動時、VS Codeは **`workspace/`** フォルダを直接開きます。このフォルダは Git 管理外なので、自由にファイルを作成・編集できます。
+DevContainer起動時、VS Codeは **`workspace/`** フォルダを直接開きます。このフォルダは親リポジトリのGit管理外なので、自由にファイルを作成・編集できます。
 
 ```bash
 # 現在地は workspace/ フォルダ
@@ -205,6 +205,23 @@ cd $REPO_ROOT
 # または
 cd ..
 ```
+
+#### workspace/ を別リポジトリとして管理する
+
+workspace/ 内で独自のGitリポジトリを初期化できます。これによりファイルがグレーアウトせず、通常のGit管理が可能になります。
+
+```bash
+# workspace/ 内で新規リポジトリを初期化
+git init
+git remote add origin git@github.com:username/my-project.git
+
+# または既存リポジトリをクローン
+cd ..
+rm -rf workspace
+git clone git@github.com:username/my-project.git workspace
+```
+
+> **セキュリティ**: グローバルgit hooks（`~/.config/git/hooks/pre-commit`）が設定されており、workspace/内のリポジトリでもコミット時にsecretlintが自動実行されます。APIキーやトークンの誤コミットを防止します。
 
 ### AI CLIの実行
 
