@@ -50,3 +50,7 @@ temp/
 dist/
 build/
 out/
+
+# Sandbox workspace (user's working directory, not tracked)
+workspace/*
+!workspace/.gitkeep
