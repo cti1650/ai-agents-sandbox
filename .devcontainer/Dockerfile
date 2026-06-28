@@ -63,6 +63,15 @@ RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
     && npm install -g lefthook \
     && npm install -g secretlint @secretlint/secretlint-rule-preset-recommend
 
+# Install gitleaks for additional secret scanning
+# Note: Using x64 binary; for arm64 hosts, change to gitleaks_*_linux_arm64.tar.gz
+ARG GITLEAKS_VERSION=8.30.1
+RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+    | tar -xz -C /home/$USERNAME/.local/bin gitleaks
+
+# Note: global git hooks (core.hooksPath) are configured in postCreateCommand
+# to avoid conflicts with lefthook install during npm install
+
 # Install Antigravity CLI via official script.
 # NOTE: the official installer always fetches the latest release and offers
 # no version-pin option, so this step is intentionally unpinned. It does
