@@ -69,8 +69,8 @@ ARG GITLEAKS_VERSION=8.30.1
 RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
     | tar -xz -C /home/$USERNAME/.local/bin gitleaks
 
-# Set up global git hooks for secretlint
-RUN git config --global core.hooksPath /home/$USERNAME/.config/git/hooks
+# Note: global git hooks (core.hooksPath) are configured in postCreateCommand
+# to avoid conflicts with lefthook install during npm install
 
 # Install Antigravity CLI via official script.
 # NOTE: the official installer always fetches the latest release and offers
