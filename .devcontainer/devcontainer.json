@@ -8,7 +8,7 @@
     "ghcr.io/devcontainers/features/git:1": {}
   },
 
-  "initializeCommand": "mkdir -p workspace && mkdir -p ~/.claude/{skills,agents,rules,commands,workflows,output-styles,themes} && touch ~/.claude/{keybindings.json,CLAUDE.md} && mkdir -p ~/.codex/{skills,plugins,rules} && touch ~/.codex/AGENTS.md && mkdir -p ~/.gemini/{config,skills,antigravity-cli/{skills,plugins}} && touch ~/.gemini/{GEMINI.md,AGENTS.md} && touch ~/.gemini/antigravity-cli/keybindings.json",
+  "initializeCommand": "mkdir -p workspace && mkdir -p ~/.claude/skills ~/.claude/agents ~/.claude/rules ~/.claude/commands ~/.claude/workflows ~/.claude/output-styles ~/.claude/themes && touch ~/.claude/keybindings.json ~/.claude/CLAUDE.md 2>/dev/null || true && mkdir -p ~/.codex/skills ~/.codex/plugins ~/.codex/rules && touch ~/.codex/AGENTS.md 2>/dev/null || true && mkdir -p ~/.gemini/config ~/.gemini/skills ~/.gemini/antigravity-cli/skills ~/.gemini/antigravity-cli/plugins && touch ~/.gemini/GEMINI.md ~/.gemini/AGENTS.md ~/.gemini/antigravity-cli/keybindings.json 2>/dev/null || true",
 
   "customizations": {
     "vscode": {
