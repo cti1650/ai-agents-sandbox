@@ -53,7 +53,7 @@ RUN mkdir -p /home/$USERNAME/.npm-global \
     && mkdir -p /home/$USERNAME/.local/bin \
     && mkdir -p /home/$USERNAME/.claude \
     && mkdir -p /home/$USERNAME/.codex \
-    && mkdir -p /home/$USERNAME/.config/antigravity \
+    && mkdir -p /home/$USERNAME/.gemini/antigravity-cli \
     && mkdir -p /home/$USERNAME/.ssh
 
 # Install Claude Code, Codex CLI, and dev tools via npm (pinned versions)

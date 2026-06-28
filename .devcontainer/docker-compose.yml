@@ -15,7 +15,38 @@ services:
       # Persist AI agent auth data across container rebuilds
       - claude-auth:/home/vscode/.claude
       - codex-auth:/home/vscode/.codex
-      - antigravity-auth:/home/vscode/.config/antigravity
+      - antigravity-auth:/home/vscode/.gemini
+
+      # Mount Claude Code config from host (read-only, overlays on top of named volume)
+      # Symlinks in ~/.claude are resolved by Docker automatically
+      - ~/.claude/skills:/home/vscode/.claude/skills:ro
+      - ~/.claude/agents:/home/vscode/.claude/agents:ro
+      - ~/.claude/rules:/home/vscode/.claude/rules:ro
+      - ~/.claude/commands:/home/vscode/.claude/commands:ro
+      - ~/.claude/workflows:/home/vscode/.claude/workflows:ro
+      - ~/.claude/output-styles:/home/vscode/.claude/output-styles:ro
+      - ~/.claude/themes:/home/vscode/.claude/themes:ro
+      - ~/.claude/settings.json:/home/vscode/.claude/settings.json:ro
+      - ~/.claude/keybindings.json:/home/vscode/.claude/keybindings.json:ro
+      - ~/.claude/CLAUDE.md:/home/vscode/.claude/CLAUDE.md:ro
+
+      # Mount Codex CLI config from host (read-only, overlays on top of named volume)
+      - ~/.codex/config.toml:/home/vscode/.codex/config.toml:ro
+      - ~/.codex/AGENTS.md:/home/vscode/.codex/AGENTS.md:ro
+      - ~/.codex/skills:/home/vscode/.codex/skills:ro
+      - ~/.codex/plugins:/home/vscode/.codex/plugins:ro
+      - ~/.codex/rules:/home/vscode/.codex/rules:ro
+
+      # Mount Antigravity CLI config from host (read-only, overlays on top of named volume)
+      # Note: Antigravity CLI uses ~/.gemini/ directory
+      - ~/.gemini/GEMINI.md:/home/vscode/.gemini/GEMINI.md:ro
+      - ~/.gemini/AGENTS.md:/home/vscode/.gemini/AGENTS.md:ro
+      - ~/.gemini/config:/home/vscode/.gemini/config:ro
+      - ~/.gemini/skills:/home/vscode/.gemini/skills:ro
+      - ~/.gemini/antigravity-cli/settings.json:/home/vscode/.gemini/antigravity-cli/settings.json:ro
+      - ~/.gemini/antigravity-cli/keybindings.json:/home/vscode/.gemini/antigravity-cli/keybindings.json:ro
+      - ~/.gemini/antigravity-cli/skills:/home/vscode/.gemini/antigravity-cli/skills:ro
+      - ~/.gemini/antigravity-cli/plugins:/home/vscode/.gemini/antigravity-cli/plugins:ro
 
     # Security: Drop unnecessary capabilities
     cap_drop:
