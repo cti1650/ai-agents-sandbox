@@ -65,10 +65,17 @@ RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
     && npm install -g lefthook \
     && npm install -g secretlint @secretlint/secretlint-rule-preset-recommend
 
-# Install gitleaks for additional secret scanning
-# Note: Using x64 binary; for arm64 hosts, change to gitleaks_*_linux_arm64.tar.gz
+# Install gitleaks for additional secret scanning.
+# Pick the binary matching the build platform so arm64 hosts (e.g. Apple
+# Silicon) build without manual edits. TARGETARCH is provided by BuildKit.
 ARG GITLEAKS_VERSION=8.30.1
-RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+ARG TARGETARCH
+RUN case "${TARGETARCH}" in \
+      amd64) GL_ARCH=x64 ;; \
+      arm64) GL_ARCH=arm64 ;; \
+      *) echo "Unsupported TARGETARCH: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${GL_ARCH}.tar.gz" \
     | tar -xz -C /home/$USERNAME/.local/bin gitleaks
 
 # Install uv (Python package/project manager) via the official pinned installer.
@@ -87,7 +94,11 @@ RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
 # NOTE: the official installer always fetches the latest release and offers
 # no version-pin option, so this step is intentionally unpinned. It does
 # verify a sha512 of the download against the release manifest.
-RUN curl -fsSL https://antigravity.google/cli/install.sh | bash
+# Retry logic added to handle intermittent HTTP/2 stream errors in Docker.
+RUN for i in 1 2 3 4 5; do \
+      curl -fsSL https://antigravity.google/cli/install.sh | bash && break; \
+      echo "Attempt $i failed, retrying in 5s..."; sleep 5; \
+    done
 
 # Set working directory
 WORKDIR /workspaces
