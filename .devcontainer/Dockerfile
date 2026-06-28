@@ -70,6 +70,15 @@ ARG GITLEAKS_VERSION=8.30.1
 RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
     | tar -xz -C /home/$USERNAME/.local/bin gitleaks
 
+# Install uv (Python package/project manager) via the official pinned installer.
+# The versioned URL pins the release for reproducible builds and verifies a
+# checksum of the download. Installs to ~/.local/bin (already on PATH).
+# NOTE: uv does NOT read PIP_CONFIG_FILE; it is routed through the same
+# Takumi Guard secure index via a global ~/.config/uv/uv.toml (installed by
+# postCreateCommand) so package installs keep the malware/quarantine protection.
+ARG UV_VERSION=0.11.25
+RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
+
 # Note: global git hooks (core.hooksPath) are configured in postCreateCommand
 # to avoid conflicts with lefthook install during npm install
 

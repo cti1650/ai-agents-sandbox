@@ -89,6 +89,7 @@ services:
     # Environment variables
     environment:
       # Takumi Guard for PyPI - blocks malicious packages + 72h quarantine
+      # (uv is routed through the same index via ~/.config/uv/uv.toml, set up in postCreateCommand)
       - PIP_CONFIG_FILE=/workspaces/${LOCAL_WORKSPACE_FOLDER_BASENAME:-ai-agents-sandbox}/pip.conf
 
     # Additional environment variables (loaded from .env file if exists)

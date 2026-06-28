@@ -1,0 +1,13 @@
+# Global uv configuration (copied to ~/.config/uv/uv.toml by postCreateCommand).
+#
+# uv does NOT read PIP_CONFIG_FILE, so the Takumi Guard (GMO Flatt Security)
+# secure index that pip.conf applies to pip is configured here for uv instead.
+# Routing uv through this index blocks known-malicious packages AND applies an
+# automatic 72h quarantine on newly published versions.
+# Docs: https://shisho.dev/docs/ja/t/guard/quickstart/pypi/
+#
+# `default = true` fully replaces the public PyPI index (mirrors pip.conf's
+# `index-url`), so every `uv add` / `uv sync` / `uv pip install` is protected.
+[[index]]
+url = "https://pypi.flatt.tech/simple/"
+default = true
