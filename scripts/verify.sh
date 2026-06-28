@@ -134,6 +134,17 @@ if printf '%s' "$pip_index" | grep -q 'pypi.flatt.tech'; then
 else
   yellow "  [WARN] pip index is not Takumi Guard (got: ${pip_index:-<default>}); check PIP_CONFIG_FILE"
 fi
+# uv does not read PIP_CONFIG_FILE; it is routed via the global ~/.config/uv/uv.toml.
+if command -v uv >/dev/null 2>&1; then
+  green "  [OK]   uv available ($(uv --version 2>/dev/null))"
+  if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/uv/uv.toml" ] && grep -q 'pypi.flatt.tech' "${XDG_CONFIG_HOME:-$HOME/.config}/uv/uv.toml" 2>/dev/null; then
+    green "  [OK]   uv index routed through Takumi Guard (~/.config/uv/uv.toml)"
+  else
+    yellow "  [WARN] uv index is not Takumi Guard; check ~/.config/uv/uv.toml (copied by postCreateCommand)"
+  fi
+else
+  yellow "  [WARN] uv not installed (rebuild image)"
+fi
 
 echo
 echo "-- Secret scanners (info) --"
