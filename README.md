@@ -98,28 +98,41 @@ macOS / Windows のどちらでも、**事前準備なし**で動作します（
 
 #### Claude Code (`~/.claude/`)
 
-| ディレクトリ | 用途 |
-|-------------|------|
+| ファイル/ディレクトリ | 用途 |
+|----------------------|------|
 | `skills/` | カスタムスキル |
-| `agents/` | カスタムエージェント |
-| `rules/` | カスタムルール |
-| `commands/` | カスタムコマンド |
-| `docs/` | ドキュメント |
-| `settings.json` | 設定ファイル |
+| `agents/` | カスタムサブエージェント |
+| `rules/` | ユーザーレベルルール |
+| `commands/` | レガシーコマンド |
+| `workflows/` | 動的ワークフロースクリプト |
+| `output-styles/` | カスタム出力フォーマット |
+| `themes/` | カスタムカラーテーマ |
+| `settings.json` | ユーザー設定 |
+| `keybindings.json` | キーボードショートカット |
+| `CLAUDE.md` | 個人用グローバル指示 |
 
 #### Codex CLI (`~/.codex/`)
 
-| ディレクトリ | 用途 |
-|-------------|------|
-| `instructions/` | カスタム指示 |
-| `agents/` | カスタムエージェント |
+| ファイル/ディレクトリ | 用途 |
+|----------------------|------|
+| `config.toml` | グローバル設定 |
+| `AGENTS.md` | グローバル指示 |
+| `skills/` | カスタムスキル |
+| `plugins/` | プラグイン |
+| `rules/` | 実行ポリシールール |
 
-#### Antigravity CLI (`~/.config/antigravity/`)
+#### Antigravity CLI (`~/.gemini/`)
 
-| ディレクトリ | 用途 |
-|-------------|------|
-| `instructions/` | カスタム指示 |
-| `agents/` | カスタムエージェント |
+| ファイル/ディレクトリ | 用途 |
+|----------------------|------|
+| `GEMINI.md` | グローバルルール |
+| `AGENTS.md` | クロスツール共有ルール |
+| `config/` | 共有MCP設定 |
+| `skills/` | 全ツール共有スキル |
+| `antigravity-cli/settings.json` | CLI設定 |
+| `antigravity-cli/keybindings.json` | キーバインド |
+| `antigravity-cli/skills/` | CLI専用スキル |
+| `antigravity-cli/plugins/` | プラグイン |
 
 **認証データは別管理**: 認証情報は named volume に保存されるため、設定の共有とは独立しています。初回のみコンテナ内で `/login` が必要ですが、以降はコンテナを再ビルドしても認証が維持されます。
 
