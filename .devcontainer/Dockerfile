@@ -56,9 +56,10 @@ RUN mkdir -p /home/$USERNAME/.npm-global \
     && mkdir -p /home/$USERNAME/.config/antigravity \
     && mkdir -p /home/$USERNAME/.ssh
 
-# Install Claude Code and Codex CLI via npm (pinned versions)
+# Install Claude Code, Codex CLI, and dev tools via npm (pinned versions)
 RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
-    && npm install -g @openai/codex@0.142.3
+    && npm install -g @openai/codex@0.142.3 \
+    && npm install -g lefthook
 
 # Install Antigravity CLI via official script.
 # NOTE: the official installer always fetches the latest release and offers

@@ -148,6 +148,17 @@ APIキーやトークンを誤ってコミットしようとすると、コミ�
 
 ## 使用方法
 
+### 作業ディレクトリ
+
+コンテナ内での作業は **`workspace/`** フォルダ内で行ってください。このフォルダは Git 管理外なので、自由にファイルを作成・編集できます。
+
+```bash
+cd workspace
+# ここで claude / codex / agy を使って作業
+```
+
+### AI CLIの実行
+
 ```bash
 # Claude Code
 claude
@@ -158,6 +169,16 @@ codex
 # Antigravity CLI
 agy
 ```
+
+### DevContainerの終了
+
+コンテナを閉じるには以下のいずれかを実行:
+
+1. **ローカルに戻る**: `Cmd/Ctrl+Shift+P` →「**Dev Containers: Reopen Folder Locally**」
+2. **VS Code を閉じる**: ウィンドウを閉じるだけでOK（コンテナは停止します）
+3. **コンテナを完全削除**: `Cmd/Ctrl+Shift+P` →「**Dev Containers: Rebuild Container**」（次回起動時に再ビルド）
+
+> コンテナを閉じても、AI ツールの認証データは named volume に保存されているため消えません。
 
 ## トラブルシューティング
 
