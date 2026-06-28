@@ -23,6 +23,5 @@ jobs:
           configFile: .devcontainer/devcontainer.json
           # postCreateCommand already runs verify.sh; run it again explicitly
           # so the job's pass/fail is tied directly to the smoke test.
-          # workspaceFolder is workspace/, so cd to repo root first.
-          runCmd: cd $REPO_ROOT && bash scripts/verify.sh
+          runCmd: bash scripts/verify.sh
           push: never

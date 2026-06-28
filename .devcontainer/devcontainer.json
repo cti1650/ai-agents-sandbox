@@ -2,7 +2,7 @@
   "name": "AI Agents Sandbox",
   "dockerComposeFile": "docker-compose.yml",
   "service": "ai-sandbox",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/workspace",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
   "features": {
     "ghcr.io/devcontainers/features/git:1": {}
@@ -19,6 +19,7 @@
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.cwd": "${workspaceFolder}/workspace",
         "editor.formatOnSave": true,
         "locale": "ja"
       }
@@ -27,7 +28,7 @@
 
   "remoteUser": "vscode",
 
-  "postCreateCommand": "cd .. && mkdir -p workspace && npm install && bash scripts/verify.sh",
+  "postCreateCommand": "mkdir -p workspace && npm install && bash scripts/verify.sh",
 
   "forwardPorts": [],
 
