@@ -65,7 +65,7 @@ RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
 
 # Install gitleaks for additional secret scanning
 # Note: Using amd64 binary; for arm64 hosts, change to gitleaks_*_linux_arm64.tar.gz
-ARG GITLEAKS_VERSION=8.21.2
+ARG GITLEAKS_VERSION=8.30.1
 RUN curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_amd64.tar.gz" \
     | tar -xz -C /home/$USERNAME/.local/bin gitleaks
 
