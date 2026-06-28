@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
     jq \
     tmux \
+    bubblewrap \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GitHub CLI
