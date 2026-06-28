@@ -38,5 +38,24 @@
       "Bash(git clean -fd*)"
     ]
   },
+  "enabledPlugins": {
+    "dev-workflow-skills@dev-workflow-marketplace": true,
+    "dev-security-skills@dev-workflow-marketplace": true,
+    "cosense-cli@cosense-cli": true
+  },
+  "extraKnownMarketplaces": {
+    "dev-workflow-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "cti1650/dev-workflow-skills"
+      }
+    },
+    "cosense-cli": {
+      "source": {
+        "source": "github",
+        "repo": "helpfeel/cosense-cli"
+      }
+    }
+  },
   "effortLevel": "high"
 }
