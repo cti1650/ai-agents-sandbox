@@ -57,5 +57,30 @@
       }
     }
   },
-  "effortLevel": "high"
+  "effortLevel": "high",
+
+  "//notify": "タスク完了・入力待ち/質問時に気づけるようターミナルベルで通知する。preferredNotifChannel が入力待ち等のOS通知をベル化し、Stop フックがターミナルへ直接BELを送る(best-effort)。実際に音を鳴らすにはホスト側 VS Code の Terminal Bell (accessibility.signals.terminalBell / terminal.integrated.enableBell) を有効化すること。",
+  "preferredNotifChannel": "terminal_bell",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\a' > /dev/tty 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\a' > /dev/tty 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
 }
