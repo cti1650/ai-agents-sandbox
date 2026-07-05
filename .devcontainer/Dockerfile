@@ -26,21 +26,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bubblewrap \
     && rm -rf /var/lib/apt/lists/*
 
-# Install GitHub CLI
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && apt-get update \
-    && apt-get install -y gh \
-    && rm -rf /var/lib/apt/lists/*
+# GitHub CLI is installed later (as the vscode user) from a pinned upstream
+# release, mirroring the gitleaks install. The previous apt-based install had
+# no version pin, so the gh version drifted build-to-build — the one exception
+# to this repo's "pin everything" supply-chain policy.
 
-# Rename existing node user to vscode (node image already has UID/GID 1000)
+# Rename existing node user to vscode (node image already has UID/GID 1000).
 ARG USERNAME=vscode
 
+# NOTE: deliberately NO passwordless-sudo grant. `no-new-privileges:true`
+# (docker-compose.yml) already makes setuid sudo fail to escalate at runtime,
+# so a NOPASSWD:ALL sudoers entry would be inert here — while still handing out
+# free root if the container were ever launched without that flag. Omitting it
+# is defense-in-depth with zero change to runtime behavior (see SECURITY.md).
 RUN usermod -l $USERNAME -d /home/$USERNAME -m node \
-    && groupmod -n $USERNAME node \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+    && groupmod -n $USERNAME node
 
 # Set npm global directory for non-root user
 ENV NPM_CONFIG_PREFIX=/home/$USERNAME/.npm-global
@@ -81,6 +81,16 @@ RUN case "${TARGETARCH}" in \
     esac \
     && curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_${GL_ARCH}.tar.gz" \
     | tar -xz -C /home/$USERNAME/.local/bin gitleaks
+
+# Install GitHub CLI from the official pinned release (replaces the unpinned
+# apt install above). gh's release assets are named by Docker's TARGETARCH
+# values (amd64/arm64), so no arch remapping is needed. The tarball nests the
+# binary under gh_<ver>_linux_<arch>/bin/gh; strip those path components so it
+# lands directly on PATH in ~/.local/bin.
+ARG GH_VERSION=2.95.0
+ARG TARGETARCH
+RUN curl -sSfL "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${TARGETARCH}.tar.gz" \
+    | tar -xz -C /home/$USERNAME/.local/bin --strip-components=2 "gh_${GH_VERSION}_linux_${TARGETARCH}/bin/gh"
 
 # Install uv (Python package/project manager) via the official pinned installer.
 # The versioned URL pins the release for reproducible builds and verifies a

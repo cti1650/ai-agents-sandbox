@@ -307,7 +307,7 @@ Claude Code で作業中に、別モデルへセカンドオピニオン・レ�
 | Codex CLI | `approval_policy = "never"` |
 | Antigravity CLI | `toolPermission: "always-proceed"` |
 
-セキュリティはコンテナの隔離環境と `deny` ルール（機密ファイル読取、破壊的コマンド、sudo等のブロック）で担保されます。
+セキュリティの**実効的な境界はコンテナ隔離・権限制御**（非 root + `no-new-privileges` + `cap_drop`）が担います。`deny` ルール（機密ファイル読取・破壊的コマンド・sudo 等）は**事故防止の補助策**で、回避可能な防壁ではありません。実行時のデータ流出リスクを含む詳細は [SECURITY.md](SECURITY.md) を参照してください。
 
 詳細は [AUTONOMOUS.md](AUTONOMOUS.md) を参照してください。
 
