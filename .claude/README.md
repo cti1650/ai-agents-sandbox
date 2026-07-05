@@ -16,7 +16,7 @@
 │   ├── external-review/SKILL.md     # 現在の diff を Codex/agy にもレビューさせて突き合わせ
 │   └── dev-commands/SKILL.md        # リポジトリ定型コマンド（環境検証・セットアップ・secretlint 等）
 ├── rules/
-│   └── coding.md                    # workspace のコード作業向け汎用規約（.claude/rules/ 自動読み込み・Claude 限定）
+│   └── coding.md                    # workspace のコード作業向け汎用規約（paths:workspace/** 限定適用・Claude 限定）
 └── agents/
     ├── codex-cli.md                 # Codex へサブタスクを委譲するサブエージェント
     └── antigravity-cli.md           # Antigravity へサブタスクを委譲するサブエージェント
