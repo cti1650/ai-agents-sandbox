@@ -5,8 +5,20 @@
 # Auto-approve all operations (container is isolated)
 approval_policy = "never"
 
-# Allow writes to workspace (safe within container)
-sandbox_mode = "workspace-write"
+# Disable Codex's OS-level sandbox (bwrap). This DevContainer runs with
+# `no-new-privileges` and without unprivileged user namespaces, so bwrap fails
+# with "No permissions to create new namespace" and EVERY `codex exec` shell
+# command — even a read-only `head` — errors out, leaving Codex unable to read
+# files (it then answers from stale context / hallucinates). Security here is the
+# container boundary (see SECURITY.md), not Codex's in-process sandbox, so we run
+# commands directly instead.
+#
+# TRADE-OFF: under `danger-full-access` the `[permissions.container.filesystem]`
+# denies below are NOT enforced (e.g. `.env` becomes readable to Codex). They are
+# kept for documentation and for environments where a working sandbox restores
+# them. The real protections remain: container isolation, Claude Code's own deny
+# rules, and secretlint/gitleaks blocking secret commits.
+sandbox_mode = "danger-full-access"
 
 # Notify on task completion (agent-turn-complete) via the shared notify script:
 # terminal bell + VS Code tab progress indicator (OSC 9;4). Passing "noslack"
@@ -90,6 +102,8 @@ decision = "forbidden"
 default_permissions = "container"
 
 # Deny reading sensitive files.
+# NOTE: these denies are NOT enforced while `sandbox_mode = "danger-full-access"`
+# (see the sandbox_mode comment above). Retained for when a working sandbox is available.
 # NOTE: codex expects `filesystem` to be a TABLE keyed by glob -> access mode
 # (read|write|deny), NOT an array of { path, access } entries. Using an array
 # fails config loading with: invalid type: sequence, expected struct

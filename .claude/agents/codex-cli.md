@@ -14,8 +14,12 @@ tools: Bash, Read, Grep, Glob
 ## 実行環境
 
 - DevContainer 内。コンテナ隔離でセキュリティ担保。
-- `~/.codex/config.toml` は `approval_policy = "never"` / `sandbox_mode = "workspace-write"` 済み。
+- `~/.codex/config.toml` は `approval_policy = "never"` / `sandbox_mode = "danger-full-access"` 済み。
   よって `codex exec` は承認プロンプトなしで走る。
+- **`--sandbox` を明示しないこと**。このコンテナは非特権 user namespace が無効で、OS サンドボックス
+  （bwrap）が `No permissions to create new namespace` で失敗し、Codex がコマンドを実行できず
+  （ファイルすら読めず）ハルシネーションする。書き換えを避けたいときはプロンプトで「変更しないこと」と
+  明示し、`git diff` で確認する。
 - 認証は `OPENAI_API_KEY` または `codex login`。未認証エラーが出たら、その旨を報告して停止する
   （代理ログインはしない）。
 
@@ -23,9 +27,9 @@ tools: Bash, Read, Grep, Glob
 
 1. **タスクを明確化**: 呼び出し元の指示から「目的・対象ファイル・完了条件」を具体化する。
 2. **Codex を実行**:
-   - 意見/調査だけ（書き換え不要）→ 読み取り専用:
+   - 意見/調査だけ（書き換え不要）→ プロンプトで変更禁止を明示（`--sandbox` は使わない）:
      ```bash
-     codex exec --sandbox read-only "<具体的な指示>"
+     codex exec "<具体的な指示>。ファイルは変更しないこと。"
      ```
    - 実装を委譲（書き込み要）:
      ```bash
