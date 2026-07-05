@@ -28,19 +28,24 @@ Claude 自身とは別の推論エンジン（OpenAI 系モデル）である Co
 ## 前提
 
 - 実行環境は DevContainer（コンテナ隔離でセキュリティを担保）。
-- `~/.codex/config.toml` は `approval_policy = "never"` / `sandbox_mode = "workspace-write"`
+- `~/.codex/config.toml` は `approval_policy = "never"` / `sandbox_mode = "danger-full-access"`
   済みなので、`codex exec` は承認プロンプトなしで走る。
+- **`--sandbox read-only` / `workspace-write` を明示しないこと**。このコンテナは非特権 user
+  namespace が無効で、OS サンドボックス（bwrap）が `No permissions to create new namespace` で
+  失敗し、**Codex がコマンドを実行できず（ファイルすら読めず）ハルシネーションする**。書き換えを
+  避けたいときはサンドボックスではなく**プロンプトで「変更しないこと」と明示 + `git diff` で確認**する。
 - 認証: `OPENAI_API_KEY`（`.env` 経由）または `codex login`。未認証だと Codex がサインインを
   促すので、その旨をユーザーに伝える。
 
 ## 使い方
 
-### 1. セカンドオピニオン（読み取り専用で意見だけもらう）
+### 1. セカンドオピニオン（意見だけもらう）
 
-Codex に**ファイルを書き換えさせず**意見だけ求める場合は `--sandbox read-only` を付ける。
+Codex に**ファイルを書き換えさせず**意見だけ求める場合も、`--sandbox` は付けない（前提参照）。
+代わりに**プロンプトで「ファイルは変更しないこと」と明示**し、実行後に `git diff` で無変更を確認する。
 
 ```bash
-codex exec --sandbox read-only "次の設計についてレビューして。懸念点と代替案を3つまで挙げて。<設計の要約や対象ファイルを具体的に記述>"
+codex exec "次の設計についてレビューして。ファイルは変更しないこと。懸念点と代替案を3つまで挙げて。<設計の要約や対象ファイルを具体的に記述>"
 ```
 
 - プロンプトには「何を・どのファイルを・何の観点で」見てほしいかを具体的に書く。
@@ -62,7 +67,7 @@ codex exec "src/foo モジュールに <仕様> を実装して。既存の <規
 ### 3. 特定ディレクトリを作業根にする
 
 ```bash
-codex exec -C <dir> --sandbox read-only "..."
+codex exec -C <dir> "..."
 ```
 
 ## 出力の扱い（重要）
@@ -76,3 +81,6 @@ codex exec -C <dir> --sandbox read-only "..."
 - `Please sign in` / 認証エラー → `OPENAI_API_KEY` を `.env` に設定するか `codex login` が必要。
   ユーザーに案内する（Claude が代理ログインはしない）。
 - Git リポジトリ外エラー → `--skip-git-repo-check` を付ける。
+- `bwrap: No permissions to create new namespace` → `--sandbox read-only` / `workspace-write` を
+  明示したときに発生（このコンテナは user namespace 無効）。`--sandbox` を外して `codex exec` の
+  まま（設定は `danger-full-access`）実行すればよい。設定の背景は `.devcontainer/codex-config.toml`。
