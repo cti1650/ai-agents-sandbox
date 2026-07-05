@@ -40,6 +40,11 @@
     "REPO_ROOT": "/workspaces/${localWorkspaceFolderBasename}",
     "PIP_CONFIG_FILE": "/workspaces/${localWorkspaceFolderBasename}/pip.conf",
 
+    // Optional Slack notifications on task-complete / input-waiting (scripts/notify.sh).
+    // Read from the host env; you can instead put SLACK_WEBHOOK_URL in .env
+    // (notify.sh also reads it from there). Empty = Slack disabled.
+    "SLACK_WEBHOOK_URL": "${localEnv:SLACK_WEBHOOK_URL}",
+
     // Consolidate Claude Code state (incl. the account/onboarding file that
     // normally lives at ~/.claude.json) INTO the ~/.claude directory, which is
     // a persisted named volume. Without this, ~/.claude.json sits on the
