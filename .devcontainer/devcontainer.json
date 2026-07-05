@@ -38,6 +38,15 @@
     "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",
     "GOOGLE_API_KEY": "${localEnv:GOOGLE_API_KEY}",
     "REPO_ROOT": "/workspaces/${localWorkspaceFolderBasename}",
-    "PIP_CONFIG_FILE": "/workspaces/${localWorkspaceFolderBasename}/pip.conf"
+    "PIP_CONFIG_FILE": "/workspaces/${localWorkspaceFolderBasename}/pip.conf",
+
+    // Consolidate Claude Code state (incl. the account/onboarding file that
+    // normally lives at ~/.claude.json) INTO the ~/.claude directory, which is
+    // a persisted named volume. Without this, ~/.claude.json sits on the
+    // container's ephemeral overlay and is lost on every rebuild, forcing a
+    // re-login even though ~/.claude/.credentials.json (the token) persists.
+    // Per the official docs, CLAUDE_CONFIG_DIR relocates every ~/.claude path
+    // (including .claude.json) under this directory.
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
   }
 }

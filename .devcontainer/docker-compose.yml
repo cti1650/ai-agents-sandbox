@@ -1,3 +1,10 @@
+# Pin the Compose project name so the named volumes below always resolve to
+# the same namespace (`ai-agents-sandbox_<volume>`). Without this, VS Code /
+# the Dev Containers CLI derive the project name from the workspace path, so
+# opening the repo from a different folder, a git worktree, or via the CLI can
+# silently switch to fresh (empty) volumes and reset ALL agent logins at once.
+name: ai-agents-sandbox
+
 services:
   ai-sandbox:
     build:
@@ -16,6 +23,13 @@ services:
       - claude-auth:/home/vscode/.claude
       - codex-auth:/home/vscode/.codex
       - antigravity-auth:/home/vscode/.gemini
+
+      # Persist GitHub CLI auth. gh stores its login under ~/.config/gh, which
+      # otherwise lives on the ephemeral overlay and is wiped on every rebuild,
+      # forcing `gh auth login` each time. A dedicated volume keeps only gh's
+      # config, avoiding conflicts with ~/.config/uv and ~/.config/git (those
+      # are recreated by postCreateCommand and must NOT be persisted).
+      - gh-auth:/home/vscode/.config/gh
 
       # Mount Claude Code config from host (read-only, overlays on top of named volume)
       # Symlinks in ~/.claude are resolved by Docker automatically
@@ -102,3 +116,4 @@ volumes:
   claude-auth:
   codex-auth:
   antigravity-auth:
+  gh-auth:

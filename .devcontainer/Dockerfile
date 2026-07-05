@@ -57,7 +57,11 @@ RUN mkdir -p /home/$USERNAME/.npm-global \
     && mkdir -p /home/$USERNAME/.codex \
     && mkdir -p /home/$USERNAME/.gemini/antigravity-cli \
     && mkdir -p /home/$USERNAME/.ssh \
-    && mkdir -p /home/$USERNAME/.config/git/hooks
+    && mkdir -p /home/$USERNAME/.config/git/hooks \
+    # Pre-create ~/.config/gh as vscode so the gh-auth named volume seeds with
+    # vscode ownership (an empty volume otherwise mounts root-owned, breaking
+    # `gh auth login` for the non-root user).
+    && mkdir -p /home/$USERNAME/.config/gh
 
 # Install Claude Code, Codex CLI, and dev tools via npm (pinned versions)
 RUN npm install -g @anthropic-ai/claude-code@2.1.195 \
