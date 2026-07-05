@@ -57,5 +57,19 @@
       }
     }
   },
-  "effortLevel": "high"
+  "effortLevel": "high",
+
+  "//notify": "タスク完了(Stop)・入力待ち/質問(Notification)を scripts/notify.sh で通知する。ローカルはターミナルベル + VS Code タブの OSC 9;4 進捗インジケータ(音設定に依存せず視覚で気づける)。環境変数 SLACK_WEBHOOK_URL を設定すると Slack にも送る(オプトイン)。UserPromptSubmit でインジケータを消す。音を鳴らすにはホスト VS Code の accessibility.signals.terminalBell を {sound:on} に(User設定)。preferredNotifChannel は入力待ち等の組み込み通知をベル化する保険。",
+  "preferredNotifChannel": "terminal_bell",
+  "hooks": {
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "bash \"$REPO_ROOT/scripts/notify.sh\" stop" } ] }
+    ],
+    "Notification": [
+      { "hooks": [ { "type": "command", "command": "bash \"$REPO_ROOT/scripts/notify.sh\" input" } ] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "bash \"$REPO_ROOT/scripts/notify.sh\" clear" } ] }
+    ]
+  }
 }

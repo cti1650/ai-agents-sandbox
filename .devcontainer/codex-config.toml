@@ -8,6 +8,19 @@ approval_policy = "never"
 # Allow writes to workspace (safe within container)
 sandbox_mode = "workspace-write"
 
+# Notify on task completion (agent-turn-complete) via the shared notify script:
+# terminal bell + VS Code tab progress indicator (OSC 9;4). Passing "noslack"
+# suppresses Slack here, because notify also fires for non-interactive
+# `codex exec` turns (e.g. when Claude runs codex as a subagent) and would
+# otherwise spam the channel; Claude's own Stop hook covers Slack.
+# Codex appends a JSON event arg (ignored). Requires host VS Code Terminal Bell
+# for audible sound; the tab indicator works without it.
+notify = ["bash", "-c", "\"$REPO_ROOT/scripts/notify.sh\" stop noslack"]
+
+[tui]
+# Desktop notifications while running the interactive Codex TUI.
+notifications = true
+
 [features]
 # Network proxy settings can be added here if needed
 
