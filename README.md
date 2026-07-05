@@ -243,6 +243,23 @@ codex
 agy
 ```
 
+### Claude Code から他のCLIを呼ぶ（Skill / SubAgent）
+
+リポジトリルートの [`.claude/`](.claude/README.md) に、Claude Code が **Codex CLI** と
+**Antigravity CLI** を Skill / SubAgent として呼び出すための設定を用意しています。
+Claude Code で作業中に、別モデルへセカンドオピニオン・レビュー・実装の分業を委譲できます。
+
+| したいこと | 言い方（例） | 呼ばれるもの |
+|---|---|---|
+| 別モデルに意見を聞く | 「Codex に聞いて」「Gemini の意見も」 | Skill `ask-codex` / `ask-antigravity` |
+| 現在の変更を多重レビュー | 「外部レビューして」 | Skill `external-review` |
+| 自己完結タスクを分業/並列実装 | 「この実装を Codex に任せて」 | SubAgent `codex-cli` / `antigravity-cli` |
+
+- Codex は `codex exec`、Antigravity は `agy -p` を非対話で呼び出します。
+- 各 CLI の**認証**（`OPENAI_API_KEY` / `codex login`、`GOOGLE_API_KEY` / サインイン）が前提です。
+- 外部 CLI の出力は参考意見として扱い、最終判断は Claude Code が検証します。
+- 詳細は [`.claude/README.md`](.claude/README.md) を参照。
+
 ### 自律実行モード（Autonomous Mode）
 
 このDevContainer環境は、AIエージェントの**自律実行**に最適化されています。ターミナルを閉じてもAIが作業を継続できます。
