@@ -1,0 +1,13 @@
+{
+  "$schema": "https://code.claude.com/schemas/settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(codex exec:*)",
+      "Bash(codex exec review:*)",
+      "Bash(codex review:*)",
+      "Bash(agy -p:*)",
+      "Bash(agy --print:*)",
+      "Bash(agy --dangerously-skip-permissions:*)"
+    ]
+  }
+}

@@ -92,6 +92,21 @@ git checkout -b refactor/cleanup
 agy "コードをリファクタリングして"
 ```
 
+### Claude Code を「司令塔」にして分業する
+
+上記のように各 CLI を人が個別に起動する運用に加え、**Claude Code から Codex / Antigravity を
+呼び出して分業**させることもできます。リポジトリルートの [`.claude/`](.claude/README.md) に
+Skill / SubAgent を用意済みです。
+
+```bash
+# Claude Code に統合役をさせ、自己完結タスクを他モデルへ委譲
+claude "認証まわりは codex-cli サブエージェントに実装させ、UIは自分で進めて。最後に external-review で突き合わせて。"
+```
+
+- Skill: `ask-codex` / `ask-antigravity`（相談・委譲）、`external-review`（多重レビュー）
+- SubAgent: `codex-cli` / `antigravity-cli`（独立コンテキストでの分業）
+- **競合回避**: 「1タスク = 1担当」を守り、同じファイルを複数エージェントが同時編集しないこと。
+
 ## セキュリティ設定
 
 各AIツールには、コンテナ専用の自律実行設定が用意されています:
