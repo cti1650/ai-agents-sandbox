@@ -13,11 +13,26 @@
 ├── skills/
 │   ├── ask-codex/SKILL.md           # Codex に相談・実装委譲（セカンドオピニオン / 分業）
 │   ├── ask-antigravity/SKILL.md     # Antigravity に相談・実装委譲
-│   └── external-review/SKILL.md     # 現在の diff を Codex/agy にもレビューさせて突き合わせ
+│   ├── external-review/SKILL.md     # 現在の diff を Codex/agy にもレビューさせて突き合わせ
+│   └── dev-commands/SKILL.md        # リポジトリ定型コマンド（環境検証・セットアップ・secretlint 等）
+├── rules/
+│   └── coding.md                    # workspace のコード作業向け汎用規約（paths:workspace/** 限定適用・Claude 限定）
 └── agents/
     ├── codex-cli.md                 # Codex へサブタスクを委譲するサブエージェント
     └── antigravity-cli.md           # Antigravity へサブタスクを委譲するサブエージェント
 ```
+
+## ルール文書（3ツール共通）
+
+プロジェクトの作法は **リポジトリルートの [`AGENTS.md`](../AGENTS.md) に一元化**しています。
+
+| ファイル | 読み手 | 中身 |
+|---|---|---|
+| `AGENTS.md` | Codex / agy（ネイティブ）+ 共通の正 | ルール本体（唯一の正） |
+| `CLAUDE.md` | Claude Code | `@AGENTS.md` を import + Claude 固有メモ |
+| `GEMINI.md` | Antigravity (`agy`) | `@AGENTS.md` を import + agy 固有メモ |
+
+ルールを直すときは **`AGENTS.md` を編集**すれば 3 ツールに反映されます。
 
 ## 使い分け
 
