@@ -4,10 +4,9 @@
 
 @AGENTS.md
 
-`workspace/` でコード（JS/TS/Python 等）を書くときの汎用コード規約は次を取り込みます
-（各プロジェクト側の設定・慣習があればそちらが優先）。
-
-@.claude/rules/coding.md
+> `workspace/` でコード（JS/TS/Python 等）を書くときの汎用コード規約は
+> [`.claude/rules/coding.md`](.claude/rules/coding.md) にあります。`.claude/rules/` は Claude Code が
+> **起動時に自動読み込み**するため `@import` は不要です（各プロジェクト側の設定・慣習があればそちらが優先）。
 
 ---
 
