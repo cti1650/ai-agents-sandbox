@@ -128,7 +128,10 @@ else
   yellow "  [WARN] python3 is ${py_ver:-unknown} (expected 3.11.x from the pinned base image)"
 fi
 # pip should route through the Takumi Guard PyPI proxy (blocking + 3-day quarantine).
-pip_index=$(python3 -m pip config get global.index-url 2>/dev/null)
+# Use `config list`, not `config get`: `pip config get` ignores the PIP_CONFIG_FILE
+# (`:env:`) scope this repo relies on, so it would report <default> even when routing
+# is active. `config list`/`debug` do include that scope.
+pip_index=$(python3 -m pip config list 2>/dev/null | sed -n "s/^global\.index-url='\(.*\)'$/\1/p")
 if printf '%s' "$pip_index" | grep -q 'pypi.flatt.tech'; then
   green "  [OK]   pip index routed through Takumi Guard ($pip_index)"
 else
