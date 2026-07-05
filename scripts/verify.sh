@@ -105,11 +105,14 @@ if [ -n "${cap_eff:-}" ]; then
   fi
 fi
 
-# sudo is configured NOPASSWD for vscode; verify it resolves.
+# Hardening check: passwordless root via sudo must NOT be available. The image
+# grants no NOPASSWD sudoers entry, and no-new-privileges blocks setuid sudo
+# from escalating anyway. If passwordless sudo *does* resolve, the container is
+# running without the expected hardening (e.g. no-new-privileges was dropped).
 if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
-  green "  [OK]   passwordless sudo works"
+  yellow "  [WARN] passwordless sudo resolves — root escalation available (hardening weakened)"
 else
-  yellow "  [WARN] passwordless sudo not available"
+  green "  [OK]   no passwordless root escalation via sudo"
 fi
 
 echo
