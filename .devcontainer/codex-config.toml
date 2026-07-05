@@ -8,6 +8,19 @@ approval_policy = "never"
 # Allow writes to workspace (safe within container)
 sandbox_mode = "workspace-write"
 
+# Notify on task completion (agent-turn-complete) by ringing the terminal bell.
+# Codex invokes this program with a JSON event argument; we ignore it and just
+# emit a BEL to the controlling terminal so the host VS Code terminal chimes.
+# Requires the host-side VS Code Terminal Bell to be enabled to actually sound
+# (accessibility.signals.terminalBell / terminal.integrated.enableBell).
+# NOTE: also fires for non-interactive `codex exec` turns (e.g. when Claude runs
+# codex as a subagent), so it can be chatty in that mode.
+notify = ["bash", "-c", "printf '\\a' > /dev/tty 2>/dev/null || true"]
+
+[tui]
+# Desktop notifications while running the interactive Codex TUI.
+notifications = true
+
 [features]
 # Network proxy settings can be added here if needed
 
