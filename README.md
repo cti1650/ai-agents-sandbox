@@ -260,6 +260,17 @@ Claude Code で作業中に、別モデルへセカンドオピニオン・レ�
 - 外部 CLI の出力は参考意見として扱い、最終判断は Claude Code が検証します。
 - 詳細は [`.claude/README.md`](.claude/README.md) を参照。
 
+### エージェント向けルール文書（3ツール共通）
+
+プロジェクト固有の作法（日本語運用・セキュリティ・CI/ピン留め・ワークフロー）は、リポジトリ
+ルートの **[`AGENTS.md`](AGENTS.md) に一元化**しています。ルールを直すときはここを編集すれば 3 ツールに反映されます。
+
+| ファイル | 読み手 | 中身 |
+|---|---|---|
+| [`AGENTS.md`](AGENTS.md) | Codex / agy がネイティブに読む・共通の正 | ルール本体（唯一の正） |
+| [`CLAUDE.md`](CLAUDE.md) | Claude Code | `@AGENTS.md` を import + Claude 固有メモ |
+| [`GEMINI.md`](GEMINI.md) | Antigravity (`agy`) | `@AGENTS.md` を import + agy 固有メモ |
+
 ### 自律実行モード（Autonomous Mode）
 
 このDevContainer環境は、AIエージェントの**自律実行**に最適化されています。ターミナルを閉じてもAIが作業を継続できます。
