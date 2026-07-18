@@ -3,7 +3,7 @@
 
 # Pinned to a patch version + digest for reproducible builds.
 # To update: bump the tag and re-resolve the digest for node:<tag>.
-FROM node:24.18.0-bookworm-slim@sha256:cb4e8f7c443347358b7875e717c29e27bf9befc8f5a26cf18af3c3dec80e58c5
+FROM node:24.18.0-bookworm-slim@sha256:6f7b03f7c2c8e2e784dcf9295400527b9b1270fd37b7e9a7285cf83b6951452d
 
 # Avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
